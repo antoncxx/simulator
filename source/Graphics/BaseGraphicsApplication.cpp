@@ -1,5 +1,7 @@
 #include "BaseGraphicsApplication.hpp"
+#include "UI.hpp"
 #include <chrono>
+
 
 namespace {
     constexpr int32_t           sDefaultWidth  = 600;
@@ -20,10 +22,9 @@ void BaseGraphicsApplication::Run() {
     auto currentFrame  = glfwGetTime();
 
     glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_LESS);
-
     glEnable(GL_CULL_FACE);
 
+    auto& userInterface = UI::Instance();
 
     while (!glfwWindowShouldClose(renderWindow)) {
         glClearColor(1.f, 1.f, 1.f, 1.f);
@@ -35,16 +36,20 @@ void BaseGraphicsApplication::Run() {
 
         glfwPollEvents();
         OnEveryFrame(delta);
+        userInterface.RenderFrame();
+
         glfwSwapBuffers(renderWindow);
     }
 }
 
 void BaseGraphicsApplication::Finalize() {
-
+    auto& userInterface = UI::Instance();
+    userInterface.Finalize();
 }
 
 void BaseGraphicsApplication::Initialize() {
-
+    auto& userInterface = UI::Instance();
+    userInterface.Initialize(renderWindow);
 }
 
 void BaseGraphicsApplication::OnEveryFrame(float delta) {

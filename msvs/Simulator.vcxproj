@@ -98,6 +98,13 @@
     <ClCompile Include="..\source\Graphics\Model.cpp" />
     <ClCompile Include="..\source\Graphics\ResourceManager.cpp" />
     <ClCompile Include="..\source\Graphics\Shader.cpp" />
+    <ClCompile Include="..\source\Graphics\UI.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\source\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="..\source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +117,15 @@
     <ClInclude Include="..\source\Graphics\Model.hpp" />
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp" />
     <ClInclude Include="..\source\Graphics\Shader.hpp" />
+    <ClInclude Include="..\source\Graphics\UI.hpp" />
+    <ClInclude Include="..\source\ImGui\imconfig.h" />
+    <ClInclude Include="..\source\ImGui\imgui.h" />
+    <ClInclude Include="..\source\ImGui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\source\ImGui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\source\ImGui\imgui_internal.h" />
+    <ClInclude Include="..\source\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="..\source\ImGui\imstb_textedit.h" />
+    <ClInclude Include="..\source\ImGui\imstb_truetype.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
