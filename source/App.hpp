@@ -4,14 +4,14 @@
 #include "Graphics/ResourceManager.hpp"
 #include "Graphics/InputHandler.hpp"
 #include "Graphics/Camera.hpp"
+#include "RoulleteController.hpp"
 
-class App final : public BaseGraphicsApplication {
+class App final : public BaseGraphicsApplication, public UIListener {
 private:
-    std::shared_ptr<Shader> sdummy{};
-    std::shared_ptr<Model>  dummy1{};
-    std::shared_ptr<Model>  dummy2{};
-
+    std::shared_ptr<Shader> shader{};
     std::shared_ptr<Camera> camera;
+    std::shared_ptr<RoulleteController> roulleteController{};
+
 public:
     explicit App() = default;
     virtual ~App() = default;
@@ -19,4 +19,11 @@ public:
     void OnEveryFrame(float delta) override;
     void Initialize() override;
     void Finalize() override;
+
+    void OnUIUpdate() override;
+
+private:
+    void UpdateViewPort();
+    void UpdateComponets(float delta);
+    void DrawComponents(float delta);
 };

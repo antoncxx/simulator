@@ -29,12 +29,11 @@ void UI::Finalize() {
 void UI::RenderFrame() {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    
+    ImGui::NewFrame();   
+
     for (auto* listener : listeners) {
         listener->OnUIUpdate();
     }
-    ImGui::ShowDemoWindow();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

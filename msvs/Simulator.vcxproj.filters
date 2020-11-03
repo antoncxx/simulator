@@ -63,6 +63,9 @@
     <ClCompile Include="..\source\Graphics\UI.cpp">
       <Filter>Source\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\RoulleteController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\source\Graphics\UI.hpp">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\RoulleteController.hpp">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

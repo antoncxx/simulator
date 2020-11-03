@@ -7,7 +7,8 @@ Mesh::Mesh(const std::string& name,
     std::vector<uint32_t>&& indices) noexcept
     : name(name)
     , vertices(std::move(vertices))
-    , indices(std::move(indices)) {
+    , indices(std::move(indices))
+    , visible(true) {
     SetupMesh();
 }
 
@@ -40,9 +41,13 @@ void Mesh::SetupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::Draw(Shader const& shader) const {
-    //glEnable(GL_DEPTH_TEST);
+void Mesh::Draw(const std::shared_ptr<Shader>& shader) const {
     glBindVertexArray(VertexArrayObject);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+}
+
+void Mesh::OnUIUpdate() {
+    std::string title = "Mesh " + name;
+    ImGui::Checkbox(title.c_str(), &visible);
 }

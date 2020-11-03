@@ -17,7 +17,7 @@ void Camera::CalculateViewMatrix() {
     };
 
     data.front = glm::normalize(direction);
-    data.right = glm::normalize(glm::cross(data.front, {0.f,1.f,0.f}));
+    data.right = glm::normalize(glm::cross(data.front, { 0.f, 1.f, 0.f })); // @TODO: Add world Up vec
     data.up    = glm::normalize(glm::cross(data.right, data.front));
 
     view = glm::lookAt(data.position, data.position + data.front, data.up);

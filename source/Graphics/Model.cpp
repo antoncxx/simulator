@@ -7,13 +7,18 @@ namespace {
 }
 
 Model::Model(const std::string& name) : name(name) {
-
 }
 
-void Model::Draw(const Shader& shader) const {
-    shader.Use();
+void Model::Draw(const std::shared_ptr<Shader>& shader) const {
+    if (!IsVisible()) {
+        return;
+    }
+
+    shader->Use();
     for (const auto& mesh : meshes) {
-        mesh.Draw(shader);
+        if (mesh.IsVisible()) {
+            mesh.Draw(shader);
+        }
     }
 }
 
@@ -67,4 +72,17 @@ void Model::ProcessNode(const aiNode* node, const aiScene* scene) {
     for (size_t i = 0u; i < node->mNumChildren; ++i) {
         ProcessNode(node->mChildren[i], scene);
     }
+}
+
+void Model::OnUIUpdate() {
+    std::string checkboxTitle = "Model: " + name;
+    ImGui::Checkbox(checkboxTitle.c_str(), &visible);
+
+    std::string headerTitle = "Meshes (" + std::to_string(meshes.size()) + ")";
+    if (ImGui::CollapsingHeader(headerTitle.c_str())) {
+        for (auto& mesh : meshes) {
+            mesh.OnUIUpdate();
+        }
+    }
+    ImGui::Separator();
 }
