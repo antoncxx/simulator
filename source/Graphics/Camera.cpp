@@ -6,8 +6,12 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, glm::vec3 front) {
     data.front    = front;
 
     CalculateViewMatrix();
+    UI::Instance().RegisterListener(this);
 }
 
+Camera::~Camera() {
+    UI::Instance().UnregisterListener(this);
+}
 
 void Camera::CalculateViewMatrix() {
     glm::vec3 direction = {
@@ -40,7 +44,6 @@ void Camera::ProcessMouse(float delta) {
         data.yaw   += data.mouseSensitivity * delta * mouseOffset.x;
         data.pitch -= data.mouseSensitivity * delta * mouseOffset.y;
 
-        glm::clamp(data.pitch, -90.f, 90.f);
         CalculateViewMatrix();
     } 
 
@@ -100,5 +103,28 @@ void Camera::SetAspectRatio(float as) {
 }
 
 void Camera::CalculateProjectionMatrix() {
-    projection = glm::perspective(data.fov, data.as, data.near, data.far);
+    projection = glm::perspective(glm::radians(data.fov), data.as, data.near, data.far);
+}
+
+void Camera::OnUIUpdate() {
+    ImGui::Begin("Camera");
+    
+    ImGui::Text("Camera parameters:");
+    ImGui::Separator();
+    ImGui::Text("Position: x = %.2f, y = %.2f, z = %.2f", data.position.x, data.position.y, data.position.z);
+    ImGui::Text("Yaw: %.2f, Pitch: %.2f", data.yaw, data.pitch);
+
+    ImGui::SliderFloat("Sensivity", &data.mouseSensitivity, 1.f, 50.f);
+    ImGui::SliderFloat("Movement speed", &data.movementSpeed, 1.f, 50.f);
+
+    bool recalc = false;
+    recalc |= ImGui::SliderFloat("Field of view", &data.fov, 1.f, 90.f);
+    recalc |= ImGui::SliderFloat("Near plane", &data.near, 0.1f, 100.f);
+    recalc |= ImGui::SliderFloat("Far plane", &data.far, 0.1f, 100.f);
+
+    ImGui::End();
+
+    if (recalc) {
+        CalculateProjectionMatrix();
+    }
 }

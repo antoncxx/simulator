@@ -13,9 +13,9 @@ void App::Initialize() {
     
     camera.reset(new Camera({ 0.f,35.f, 100.f }));
 
-    camera->SetAspectRatio(1.75);
-    camera->SetFov(45);
-    camera->SetPlanes(0.1, 300);
+    camera->SetAspectRatio(1.75f);
+    camera->SetFov(45.f);
+    camera->SetPlanes(0.1f, 300.f);
 
     roulleteController = RoulleteController::Create();
 

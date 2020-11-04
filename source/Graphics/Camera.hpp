@@ -3,6 +3,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "InputHandler.hpp"
+#include "UI.hpp"
 
 namespace {
     struct CameraData {
@@ -26,14 +27,14 @@ namespace {
 }
 
 // Floatable camera with perspective projection
-class Camera {
+class Camera final : public UIListener {
     glm::mat4  view{};
     glm::mat4  projection{};
     CameraData data{};
 
 public:
     explicit Camera(glm::vec3 position, glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3 front = glm::vec3(0.0f, 0.0f, -1.0f));
-    ~Camera() = default;
+    ~Camera();
 
     inline auto ViewMatrix() const noexcept { return view; };
     inline auto ProjectionMatrix() const noexcept { return projection; }
@@ -43,6 +44,8 @@ public:
     void SetFov(float fov);
     void SetPlanes(float near, float far);
     void SetAspectRatio(float as);
+
+    void OnUIUpdate() override;
 private:
     void CalculateViewMatrix();
     void CalculateProjectionMatrix();

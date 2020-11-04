@@ -76,7 +76,8 @@ static inline KeyboardButton decodeGLFWKeyboardButton(int32_t code) {
     }
 }
 
-struct InputsCallbacksWrapper {
+class InputsCallbacksWrapper {
+public:
     static void OnScrollCallback(GLFWwindow*, double xoff, double yoff) {
         auto& instance = InputHandler::Instance();
         instance.mouseState.offset += glm::vec2{ xoff, yoff };
