@@ -27,4 +27,5 @@ private:
     void UpdateViewPort();
     void UpdateComponets(float delta);
     void DrawComponents(float delta);
+    void DrawPhysicsDebugWorld(float delta);
 };

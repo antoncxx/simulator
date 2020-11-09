@@ -24,6 +24,8 @@ public:
     bool IsVisible() const noexcept { return visible; }
 
     void OnUIUpdate() override;
+
+    auto GetMeshes() const noexcept { return meshes; }
 private:
     void InitalizeFromScene(const aiScene* scene);
     void ProcessNode(const aiNode* node, const aiScene* scene);

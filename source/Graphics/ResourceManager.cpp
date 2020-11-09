@@ -44,7 +44,7 @@ ResourceManager::CreateShader(
 ResourceManager::CreateModel(const std::string& name,
     const std::filesystem::path& modelSource) {
     Assimp::Importer importer;
-    const auto* scene = importer.ReadFile(modelSource.string(), aiProcess_Triangulate);
+    const auto* scene = importer.ReadFile(modelSource.string(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         throw std::runtime_error(importer.GetErrorString());

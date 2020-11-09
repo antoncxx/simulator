@@ -4,8 +4,8 @@
 
 
 namespace {
-    constexpr int32_t           sDefaultWidth  = 600;
-    constexpr int32_t           sDefaultHeight = 480;
+    constexpr int32_t           sDefaultWidth  = 800;
+    constexpr int32_t           sDefaultHeight = 600;
     constexpr const char* const sDefaultTitle  = "Roullete Simulator";
 }
 

@@ -7,6 +7,7 @@
 
 #include <exception>
 #include <cassert>
+#include <thread>
 
 namespace {
     physx::PxDefaultErrorCallback gDefaultErrorCallback;
@@ -21,25 +22,50 @@ Physics& Physics::Instance() {
 
 void Physics::StartUp() {
     using namespace physx;
+    {
+        foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocator, gDefaultErrorCallback);
+        assert(foundation);
 
-    foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocator, gDefaultErrorCallback);
-    assert(foundation);
 
-    pvd = PxCreatePvd(*foundation);
-    assert(pvd);
+        pvd = PxCreatePvd(*foundation);
+        assert(pvd);
 
-    auto* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 3232, 10);
-    assert(transport);
+        auto* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 3232, 10);
+        assert(transport);
 
-    pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-    assert(pvd);
+        pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+        assert(pvd);
+    }
 
-    auto scale = PxTolerancesScale();
-    physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
-    assert(physics);
+    {
+        auto scale = PxTolerancesScale();
+        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
+        assert(physics);
 
-    cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, scale);
-    assert(cooking);
+        PxCookingParams cookingParams(physics->getTolerancesScale());
+        cookingParams.midphaseDesc.setToDefault(PxMeshMidPhase::eBVH33);
+        cookingParams.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+        cookingParams.meshPreprocessParams |= PxMeshPreprocessingFlag::eFORCE_32BIT_INDICES;
+
+        cooking = PxCreateCooking(PX_PHYSICS_VERSION, *foundation, cookingParams);
+        assert(cooking);
+
+        dispatcher = PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency());
+        assert(dispatcher);
+
+        PxSceneDesc desc(scale);
+        desc.cpuDispatcher = dispatcher;
+        desc.gravity = { 0.f, -9.81f, 0.f };
+        desc.filterShader = PxDefaultSimulationFilterShader;
+
+        scene = physics->createScene(desc);
+
+        if (auto* pvd = scene->getScenePvdClient(); pvd) {
+            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS,  true);
+            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS,     true);
+            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+        }
+    }
 }
 
 void Physics::ShutDown() {

@@ -8,6 +8,7 @@ void App::Initialize() {
     BaseGraphicsApplication::Initialize();
     InputHandler::Instance().Setup(renderWindow);
     UI::Instance().RegisterListener(this);
+    Physics::Instance().StartUp();
 
     shader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
     
@@ -19,7 +20,6 @@ void App::Initialize() {
 
     roulleteController = RoulleteController::Create();
 
-    Physics::Instance().StartUp();
 }
 
 void App::Finalize() {
@@ -33,7 +33,7 @@ void App::OnEveryFrame(float delta) {
     UpdateViewPort();
     UpdateComponets(delta);
     DrawComponents(delta);
-
+    DrawPhysicsDebugWorld(delta);
 }
 
 void App::UpdateViewPort() {
@@ -68,4 +68,33 @@ void App::OnUIUpdate() {
     float framerate = ImGui::GetIO().Framerate;
     std::string title = "Roullete Simulator. Framerate: " + std::to_string(framerate);
     glfwSetWindowTitle(renderWindow, title.c_str());
+}
+
+void App::DrawPhysicsDebugWorld(float delta) {
+    const auto& renderBuffer = Physics::Instance().GetScene()->getRenderBuffer();
+
+    std::vector<float> data;
+    data.reserve(3 * static_cast<size_t>(renderBuffer.getNbLines()));
+
+    const auto* lines = renderBuffer.getLines();
+    for (size_t i = 0u; i < renderBuffer.getNbLines(); ++i) {
+        data.push_back(lines[i].pos0.x);
+        data.push_back(lines[i].pos0.y);
+        data.push_back(lines[i].pos0.z);
+
+        data.push_back(lines[i].pos1.x);
+        data.push_back(lines[i].pos1.y);
+        data.push_back(lines[i].pos1.z);
+    }
+
+    if (!data.empty()) {
+        glEnable(GL_LINE_SMOOTH);
+        glLineWidth(10);
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glVertexPointer(3, GL_FLOAT, 0, data.data());
+        glDrawArrays(GL_LINES, 0, 2);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisable(GL_LINE_SMOOTH);
+    }
+
 }

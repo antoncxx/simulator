@@ -23,6 +23,7 @@ class Mesh final : public UIListener {
     bool visible;
 public:
     explicit Mesh(const std::string& name, std::vector<Vertex>&& verticies, std::vector<uint32_t>&& indicies) noexcept;
+    Mesh(const Mesh&) = default;
     Mesh(Mesh&&) = default;
     ~Mesh() = default;
 
@@ -30,6 +31,10 @@ public:
     void Cleanup();
     bool IsVisible() const noexcept { return visible; }
     void OnUIUpdate() override;
+
+    auto GetVertices() const noexcept { return vertices; }
+    auto GetIndices() const noexcept { return indices; }
+
 private:
     void SetupMesh();
 };

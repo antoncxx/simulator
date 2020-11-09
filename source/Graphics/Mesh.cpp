@@ -1,7 +1,8 @@
 #include "Mesh.hpp"
 
 #include <GL/glew.h>
-
+#include <set>
+#include <iostream>
 Mesh::Mesh(const std::string& name,
     std::vector<Vertex>&& vertices, 
     std::vector<uint32_t>&& indices) noexcept

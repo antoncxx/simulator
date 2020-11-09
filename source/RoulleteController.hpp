@@ -1,9 +1,22 @@
 #include "Graphics/ResourceManager.hpp"
 #include "Graphics/UI.hpp"
+#include "Physics/Physics.hpp"
+
 
 struct RotatorParametrs {
     float AngulatVelocity{ 1.f };
     float CurrentAngle{ 0.f };
+};
+
+struct RoulleteMaterial {
+    float StaticFriction{ 0.5f };
+    float DynamicFriction{ 0.5f };
+    float Restitution{ 0.6f };
+};
+
+enum class ModelProcessingFlag {
+    STATIC_MODEL,
+    DYNAMIC_MODEL,
 };
 
 class RoulleteController : public UIListener {
@@ -11,6 +24,8 @@ class RoulleteController : public UIListener {
     std::shared_ptr<Model>  dynamicRoullete{};
 
     RotatorParametrs rotatorParameter{};
+    RoulleteMaterial roulleteMaterial{};
+    physx::PxMaterial* xMaterial{nullptr};
 public:
     RoulleteController() noexcept;
     virtual ~RoulleteController() noexcept;
@@ -22,4 +37,9 @@ public:
     void Draw(const std::shared_ptr<Shader>& shader);
 private:
     void Initialize();
+    void CreatePhysics();
+
+    void ProcessModel(const std::shared_ptr<Model>& model, ModelProcessingFlag flag);
+    physx::PxTriangleMesh* ConvertMesh(const Mesh& mesh);
+    physx::PxMaterial* CreateMaterial();
 };
