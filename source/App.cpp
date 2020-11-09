@@ -19,11 +19,13 @@ void App::Initialize() {
 
     roulleteController = RoulleteController::Create();
 
+    Physics::Instance().StartUp();
 }
 
 void App::Finalize() {
     UI::Instance().UnregisterListener(this);
     ResourceManager::Instance().Cleanup();
+    Physics::Instance().ShutDown();
     BaseGraphicsApplication::Finalize();
 }
 

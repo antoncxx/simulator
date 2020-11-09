@@ -10,6 +10,9 @@
     <Filter Include="Source\ImGui">
       <UniqueIdentifier>{6565489a-0515-4aa8-a4b2-645c72cd9530}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Physics">
+      <UniqueIdentifier>{b013f9a7-4b77-4437-9ce5-4fb553017857}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -65,6 +68,9 @@
     </ClCompile>
     <ClCompile Include="..\source\RoulleteController.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Physics\Physics.cpp">
+      <Filter>Source\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="..\source\RoulleteController.hpp">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Physics\Physics.hpp">
+      <Filter>Source\Physics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

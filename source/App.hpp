@@ -5,6 +5,7 @@
 #include "Graphics/InputHandler.hpp"
 #include "Graphics/Camera.hpp"
 #include "RoulleteController.hpp"
+#include "Physics/Physics.hpp"
 
 class App final : public BaseGraphicsApplication, public UIListener {
 private:
