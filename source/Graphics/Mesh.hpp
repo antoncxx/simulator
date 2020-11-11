@@ -18,7 +18,7 @@ class Mesh final : public UIListener {
     std::vector<Vertex>   vertices;
     std::vector<uint32_t> indices;
 
-    uint32_t VertexArrayObject, VertexBufferObject, ElementBufferObject, NormalsBufferObject;
+    uint32_t VertexArrayObject, VertexBufferObject, ElementBufferObject;
 
     bool visible;
 public:
@@ -37,4 +37,5 @@ public:
 
 private:
     void SetupMesh();
+    void SetupBoundingBox();
 };

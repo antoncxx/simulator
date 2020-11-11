@@ -11,6 +11,7 @@ namespace {
         glm::vec3 front;
         glm::vec3 right;
         glm::vec3 up;
+        glm::vec3 worldUp;
 
         float yaw{ -90.f };
         float pitch{ 0.f };

@@ -75,6 +75,12 @@
     <ClCompile Include="..\source\BallController.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\State.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Converter.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp">
@@ -138,6 +144,12 @@
       <Filter>Source\Physics</Filter>
     </ClInclude>
     <ClInclude Include="..\source\BallController.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\State.hpp">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Converter.hpp">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

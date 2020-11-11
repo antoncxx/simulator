@@ -4,8 +4,8 @@
 #include "Physics/Physics.hpp"
 
 struct BallMaterial {
-    float StaticFriction{ 0.5f };
-    float DynamicFriction{ 0.5f };
+    float StaticFriction{ 0.1f };
+    float DynamicFriction{ 0.1f };
     float Restitution{ 0.6f };
 };
 
@@ -26,5 +26,7 @@ private:
     void Initialize();
     void CreatePhysics();
     physx::PxMaterial* CreateMaterial();
+
+    void Reset();
 
 };

@@ -34,6 +34,7 @@ void Physics::StartUp() {
 
     {
         auto scale = PxTolerancesScale();
+        scale.speed = 20.f;
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
         assert(physics);
 

@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClCompile Include="..\source\App.cpp" />
     <ClCompile Include="..\source\BallController.cpp" />
+    <ClCompile Include="..\source\Converter.cpp" />
     <ClCompile Include="..\source\Graphics\BaseGraphicsApplication.cpp" />
     <ClCompile Include="..\source\Graphics\Camera.cpp" />
     <ClCompile Include="..\source\Graphics\GraphicalResource.cpp" />
@@ -109,10 +110,12 @@
     <ClCompile Include="..\source\main.cpp" />
     <ClCompile Include="..\source\Physics\Physics.cpp" />
     <ClCompile Include="..\source\RoulleteController.cpp" />
+    <ClCompile Include="..\source\State.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\App.hpp" />
     <ClInclude Include="..\source\BallController.hpp" />
+    <ClInclude Include="..\source\Converter.hpp" />
     <ClInclude Include="..\source\Graphics\BaseGraphicsApplication.hpp" />
     <ClInclude Include="..\source\Graphics\Camera.hpp" />
     <ClInclude Include="..\source\Graphics\GraphicalResource.hpp" />
@@ -132,6 +135,7 @@
     <ClInclude Include="..\source\ImGui\imstb_truetype.h" />
     <ClInclude Include="..\source\Physics\Physics.hpp" />
     <ClInclude Include="..\source\RoulleteController.hpp" />
+    <ClInclude Include="..\source\State.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

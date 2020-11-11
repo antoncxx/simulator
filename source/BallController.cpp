@@ -1,6 +1,6 @@
 #include "BallController.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-
+#include <iostream>
 
 BallController::BallController() {
     UI::Instance().RegisterListener(this);
@@ -12,6 +12,9 @@ BallController::~BallController() {
 
 void BallController::OnUIUpdate() {
     ImGui::Begin("Ball controller");
+    if (ImGui::Button("Reset")) {
+        Reset();
+    }
     ImGui::End();
 }
 
@@ -22,7 +25,7 @@ void BallController::CreatePhysics() {
 
     auto* material = CreateMaterial();
 
-    rigidBody = PxCreateDynamic(*physics, PxTransform(3, 50, 3), PxSphereGeometry(1.f), *material, 3.f);
+    rigidBody = PxCreateDynamic(*physics, PxTransform(3, 50, 3), PxSphereGeometry(1.f), *material, 32.f);
     scene->addActor(*rigidBody);
 }
 
@@ -54,6 +57,14 @@ physx::PxMaterial* BallController::CreateMaterial() {
 }
 
 void BallController::Update(float delta) {
+    //auto vel = rigidBody->getLinearVelocity();
+    //if (vel.magnitude() <= 1e-3) {
+    //    std::cout << "End\n";
+    //}
+}
 
+void BallController::Reset() {
+    rigidBody->setLinearVelocity({ 0, 0, 0 });
+    rigidBody->setGlobalPose(physx::PxTransform(3, 50, 3));
 }
 

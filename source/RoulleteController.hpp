@@ -4,7 +4,7 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 0.f };
+    float AngulatVelocity{ .2f };
     float CurrentAngle{ 0.f };
 };
 
@@ -42,7 +42,5 @@ private:
     void CreatePhysics();
 
     void ProcessModel(const std::shared_ptr<Model>& model, ModelProcessingFlag flag);
-    physx::PxTriangleMesh* ConvertMesh(const Mesh& mesh);
     physx::PxMaterial* CreateMaterial();
-    void UpdateFloatableMesh(physx::PxRigidStatic* rigid);
 };

@@ -4,6 +4,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, glm::vec3 front) {
     data.position = position;
     data.up       = up;
     data.front    = front;
+    data.worldUp  = up;
 
     CalculateViewMatrix();
     UI::Instance().RegisterListener(this);
@@ -21,7 +22,7 @@ void Camera::CalculateViewMatrix() {
     };
 
     data.front = glm::normalize(direction);
-    data.right = glm::normalize(glm::cross(data.front, { 0.f, 1.f, 0.f })); // @TODO: Add world Up vec
+    data.right = glm::normalize(glm::cross(data.front, data.worldUp)); 
     data.up    = glm::normalize(glm::cross(data.right, data.front));
 
     view = glm::lookAt(data.position, data.position + data.front, data.up);
@@ -120,7 +121,7 @@ void Camera::OnUIUpdate() {
     bool recalc = false;
     recalc |= ImGui::SliderFloat("Field of view", &data.fov, 1.f, 90.f);
     recalc |= ImGui::SliderFloat("Near plane", &data.near, 0.1f, 100.f);
-    recalc |= ImGui::SliderFloat("Far plane", &data.far, 0.1f, 100.f);
+    recalc |= ImGui::SliderFloat("Far plane", &data.far, 0.1f, 1000.f);
 
     ImGui::End();
 

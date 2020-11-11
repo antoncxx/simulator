@@ -1,4 +1,5 @@
 #include "RoulleteController.hpp"
+#include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 RoulleteController::RoulleteController() noexcept {
@@ -31,18 +32,25 @@ void RoulleteController::OnUIUpdate() {
     materialChanged |= ImGui::SliderFloat("Restitution", &roulleteMaterial.Restitution, 0.f, 1.f);
 
     if (materialChanged) {
-        // todo
+        xMaterial->setStaticFriction(roulleteMaterial.StaticFriction);
+        xMaterial->setDynamicFriction(roulleteMaterial.DynamicFriction);
+        xMaterial->setRestitution(roulleteMaterial.Restitution);
     }
 
     ImGui::End();
 }
 
 void RoulleteController::Update(float delta) {
+    using namespace physx;
+
     rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta;
+
+    PxQuat quaternion(rotatorParameter.CurrentAngle, { 0.f, 1.f, 0.f });
+    auto transform = PxTransform(0.f, 0.f, 0.f, quaternion);
 
     for (auto* mesh : rotators) {
         if (mesh != nullptr) {
-            UpdateFloatableMesh(mesh);
+            mesh->setGlobalPose(transform);
         }
     }
 }
@@ -79,7 +87,7 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
     auto* scene   = Physics::Instance().GetScene();
 
     for (auto& mesh : model->GetMeshes()) {
-        auto* xmesh = ConvertMesh(mesh);
+        auto* xmesh = PXConverter::ConvertMesh(mesh, physics, cooking);
 
         PxTriangleMeshGeometry geometry(xmesh);
 
@@ -89,53 +97,17 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
         shape->setContactOffset(0.01f);
         shape->setRestOffset(-0.01f);
         rigidStatic->attachShape(*shape);
+
+        if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
+            rotators.push_back(rigidStatic);
+        }
+
         scene->addActor(*rigidStatic);
     }
 
 }
 
-physx::PxTriangleMesh* RoulleteController::ConvertMesh(const Mesh& mesh) {
-    using namespace physx;
-
-    auto* physics = Physics::Instance().GetPhysics();
-    auto* cooking = Physics::Instance().GetCooking();
-
-    auto vertices = mesh.GetVertices();
-    auto indicies = mesh.GetIndices();
-
-    PxTriangleMeshDesc description;
-
-
-    description.points.data   = vertices.data();
-    description.points.count  = vertices.size();
-    description.points.stride = sizeof(Vertex);
-
-    description.triangles.count  = PxU32(indicies.size() / 3);
-    description.triangles.data   = indicies.data();
-    description.triangles.stride = 3 * sizeof(uint32_t);
-
-    if (!description.isValid()) {
-        // todo
-    }
-
-    PxDefaultMemoryOutputStream       writeBuffer{};
-    PxTriangleMeshCookingResult::Enum result{};
-
-    if (!cooking->cookTriangleMesh(description, writeBuffer, &result)) {
-        // todo
-    }
-
-    PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
-    return physics->createTriangleMesh(readBuffer);
-}
-
 physx::PxMaterial* RoulleteController::CreateMaterial() {
     auto* physics = Physics::Instance().GetPhysics();
     return physics->createMaterial(roulleteMaterial.StaticFriction, roulleteMaterial.DynamicFriction, roulleteMaterial.Restitution);
-}
-
-void RoulleteController::UpdateFloatableMesh(physx::PxRigidStatic* rigid) {
-    auto transform = rigid->getGlobalPose();
-    transform.rotate({ 0.f, glm::radians<float>(rotatorParameter.CurrentAngle), 0.f });
-    rigid->setGlobalPose(transform);
 }
