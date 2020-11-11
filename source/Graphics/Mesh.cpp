@@ -11,6 +11,7 @@ Mesh::Mesh(const std::string& name,
     , indices(std::move(indices))
     , visible(true) {
     SetupMesh();
+    SetupBoundingBox();
 }
 
 void Mesh::Cleanup() {
@@ -61,10 +62,10 @@ void Mesh::SetupBoundingBox() {
 
     // todo: validate results
 
-    glm::vec3 size{
-        xpair.second->Position.x - xpair.first->Position.x,
-        xpair.second->Position.y - xpair.first->Position.y,
-        xpair.second->Position.z - xpair.first->Position.z
+    glm::vec3 center{
+        (xpair.second->Position.x + xpair.first->Position.x) / 2,
+        (xpair.second->Position.y + xpair.first->Position.y) / 2,
+        (xpair.second->Position.z + xpair.first->Position.z) / 2
     };
     
 

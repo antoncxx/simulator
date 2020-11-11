@@ -81,6 +81,9 @@
     <ClCompile Include="..\source\Converter.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\Graphics\BoundingBox.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="..\source\Converter.hpp">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Graphics\BoundingBox.hpp">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

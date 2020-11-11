@@ -93,6 +93,7 @@
     <ClCompile Include="..\source\BallController.cpp" />
     <ClCompile Include="..\source\Converter.cpp" />
     <ClCompile Include="..\source\Graphics\BaseGraphicsApplication.cpp" />
+    <ClCompile Include="..\source\Graphics\BoundingBox.cpp" />
     <ClCompile Include="..\source\Graphics\Camera.cpp" />
     <ClCompile Include="..\source\Graphics\GraphicalResource.cpp" />
     <ClCompile Include="..\source\Graphics\InputHandler.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\source\BallController.hpp" />
     <ClInclude Include="..\source\Converter.hpp" />
     <ClInclude Include="..\source\Graphics\BaseGraphicsApplication.hpp" />
+    <ClInclude Include="..\source\Graphics\BoundingBox.hpp" />
     <ClInclude Include="..\source\Graphics\Camera.hpp" />
     <ClInclude Include="..\source\Graphics\GraphicalResource.hpp" />
     <ClInclude Include="..\source\Graphics\InputHandler.hpp" />
