@@ -1,4 +1,5 @@
 #include "Model.hpp"
+#include <GL/glew.h>
 
 namespace {
     inline glm::vec3 ToGLMVector(const aiVector3D& vector) noexcept {
@@ -15,6 +16,7 @@ void Model::Draw(const std::shared_ptr<Shader>& shader) const {
     }
 
     shader->Use();
+
     for (const auto& mesh : meshes) {
         if (mesh.IsVisible()) {
             mesh.Draw(shader);
@@ -84,5 +86,6 @@ void Model::OnUIUpdate() {
             mesh.OnUIUpdate();
         }
     }
+
     ImGui::Separator();
 }

@@ -4,7 +4,7 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 1.f };
+    float AngulatVelocity{ 0.f };
     float CurrentAngle{ 0.f };
 };
 
@@ -26,6 +26,8 @@ class RoulleteController : public UIListener {
     RotatorParametrs rotatorParameter{};
     RoulleteMaterial roulleteMaterial{};
     physx::PxMaterial* xMaterial{nullptr};
+
+    std::list<physx::PxRigidStatic*> rotators{};
 public:
     RoulleteController() noexcept;
     virtual ~RoulleteController() noexcept;
@@ -42,4 +44,5 @@ private:
     void ProcessModel(const std::shared_ptr<Model>& model, ModelProcessingFlag flag);
     physx::PxTriangleMesh* ConvertMesh(const Mesh& mesh);
     physx::PxMaterial* CreateMaterial();
+    void UpdateFloatableMesh(physx::PxRigidStatic* rigid);
 };

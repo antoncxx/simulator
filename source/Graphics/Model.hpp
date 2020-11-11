@@ -8,6 +8,7 @@
 
 class ResourceManager;
 
+
 class Model final : public GraphicalResource, public UIListener {
     std::vector<Mesh> meshes;
     std::string name;

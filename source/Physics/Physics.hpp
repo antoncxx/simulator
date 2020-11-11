@@ -1,6 +1,9 @@
 #pragma once
 #include "PxPhysicsAPI.h"
-
+#include "extensions/PxExtensionsAPI.h"
+#include "extensions/PxDefaultAllocator.h"
+#include "pvd/PxPvd.h"
+#include "PxConfig.h"
 
 class Physics {
     physx::PxFoundation*    foundation;

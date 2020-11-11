@@ -11,6 +11,7 @@ void App::Initialize() {
     Physics::Instance().StartUp();
 
     shader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
+    debug_shader = ResourceManager::Instance().CreateShader("DebugShader", "Resources/Shaders/Debug.vs", "Resources/Shaders/Debug.fs");
     
     camera.reset(new Camera({ 0.f,35.f, 100.f }));
 
@@ -19,7 +20,7 @@ void App::Initialize() {
     camera->SetPlanes(0.1f, 300.f);
 
     roulleteController = RoulleteController::Create();
-
+    ballController     = BallController::Create();
 }
 
 void App::Finalize() {
@@ -52,8 +53,11 @@ void App::UpdateViewPort() {
 }
 
 void App::UpdateComponets(float delta) {
-    roulleteController->Update(delta);
     camera->Update(delta);
+    ballController->Update(delta);
+    roulleteController->Update(delta);
+
+    SimulationStep(delta);
 }
 
 void App::DrawComponents(float delta) {
@@ -62,6 +66,7 @@ void App::DrawComponents(float delta) {
     shader->SetUniform("projection", camera->ProjectionMatrix());
 
     roulleteController->Draw(shader);
+    ballController->Draw(shader);
 }
 
 void App::OnUIUpdate() {
@@ -71,30 +76,12 @@ void App::OnUIUpdate() {
 }
 
 void App::DrawPhysicsDebugWorld(float delta) {
-    const auto& renderBuffer = Physics::Instance().GetScene()->getRenderBuffer();
+    // todo
 
-    std::vector<float> data;
-    data.reserve(3 * static_cast<size_t>(renderBuffer.getNbLines()));
+}
 
-    const auto* lines = renderBuffer.getLines();
-    for (size_t i = 0u; i < renderBuffer.getNbLines(); ++i) {
-        data.push_back(lines[i].pos0.x);
-        data.push_back(lines[i].pos0.y);
-        data.push_back(lines[i].pos0.z);
-
-        data.push_back(lines[i].pos1.x);
-        data.push_back(lines[i].pos1.y);
-        data.push_back(lines[i].pos1.z);
-    }
-
-    if (!data.empty()) {
-        glEnable(GL_LINE_SMOOTH);
-        glLineWidth(10);
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(3, GL_FLOAT, 0, data.data());
-        glDrawArrays(GL_LINES, 0, 2);
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisable(GL_LINE_SMOOTH);
-    }
-
+void App::SimulationStep(float dt) {
+    auto* scene = Physics::Instance().GetScene();
+    scene->simulate(dt);
+    scene->fetchResults(true);
 }

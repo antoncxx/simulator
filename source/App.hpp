@@ -5,13 +5,16 @@
 #include "Graphics/InputHandler.hpp"
 #include "Graphics/Camera.hpp"
 #include "RoulleteController.hpp"
+#include "BallController.hpp"
 #include "Physics/Physics.hpp"
 
 class App final : public BaseGraphicsApplication, public UIListener {
 private:
     std::shared_ptr<Shader> shader{};
+    std::shared_ptr<Shader> debug_shader{};
     std::shared_ptr<Camera> camera;
     std::shared_ptr<RoulleteController> roulleteController{};
+    std::shared_ptr<BallController>     ballController{};
 
 public:
     explicit App() = default;
@@ -28,4 +31,5 @@ private:
     void UpdateComponets(float delta);
     void DrawComponents(float delta);
     void DrawPhysicsDebugWorld(float delta);
+    void SimulationStep(float dt);
 };

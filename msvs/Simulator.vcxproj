@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\source\App.cpp" />
+    <ClCompile Include="..\source\BallController.cpp" />
     <ClCompile Include="..\source\Graphics\BaseGraphicsApplication.cpp" />
     <ClCompile Include="..\source\Graphics\Camera.cpp" />
     <ClCompile Include="..\source\Graphics\GraphicalResource.cpp" />
@@ -111,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\App.hpp" />
+    <ClInclude Include="..\source\BallController.hpp" />
     <ClInclude Include="..\source\Graphics\BaseGraphicsApplication.hpp" />
     <ClInclude Include="..\source\Graphics\Camera.hpp" />
     <ClInclude Include="..\source\Graphics\GraphicalResource.hpp" />

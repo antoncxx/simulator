@@ -1,10 +1,5 @@
 #include "Physics.hpp"
 
-#include "extensions/PxExtensionsAPI.h"
-#include "extensions/PxDefaultAllocator.h"
-#include "pvd/PxPvd.h"
-#include "PxConfig.h"
-
 #include <exception>
 #include <cassert>
 #include <thread>
@@ -65,6 +60,9 @@ void Physics::StartUp() {
             pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS,     true);
             pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
         }
+
+        scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
+        scene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
     }
 }
 

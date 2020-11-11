@@ -39,8 +39,12 @@ void RoulleteController::OnUIUpdate() {
 
 void RoulleteController::Update(float delta) {
     rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta;
-    Physics::Instance().GetScene()->simulate(delta);
-    Physics::Instance().GetScene()->fetchResults(true);
+
+    for (auto* mesh : rotators) {
+        if (mesh != nullptr) {
+            UpdateFloatableMesh(mesh);
+        }
+    }
 }
 
 void RoulleteController::Initialize() {
@@ -72,18 +76,18 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
 
     auto* physics = Physics::Instance().GetPhysics();
     auto* cooking = Physics::Instance().GetCooking();
-    auto* scene = Physics::Instance().GetScene();
+    auto* scene   = Physics::Instance().GetScene();
 
     for (auto& mesh : model->GetMeshes()) {
         auto* xmesh = ConvertMesh(mesh);
+
         PxTriangleMeshGeometry geometry(xmesh);
 
         auto* rigidStatic = physics->createRigidStatic(PxTransform(PxVec3(0.f, 0.f, 0.f)));
         auto* shape = physics->createShape(geometry, *xMaterial);
-
-        shape->setContactOffset(0.02f);
-        shape->setRestOffset(-0.5f);
-
+        
+        shape->setContactOffset(0.01f);
+        shape->setRestOffset(-0.01f);
         rigidStatic->attachShape(*shape);
         scene->addActor(*rigidStatic);
     }
@@ -99,31 +103,39 @@ physx::PxTriangleMesh* RoulleteController::ConvertMesh(const Mesh& mesh) {
     auto vertices = mesh.GetVertices();
     auto indicies = mesh.GetIndices();
 
-    PxTriangleMeshDesc desc;
-    
-    std::vector<PxVec3> buf;
+    PxTriangleMeshDesc description;
 
-    for (auto v : vertices) {
-        buf.push_back({ v.Position.x, v.Position.y, v.Position.z });
+
+    description.points.data   = vertices.data();
+    description.points.count  = vertices.size();
+    description.points.stride = sizeof(Vertex);
+
+    description.triangles.count  = PxU32(indicies.size() / 3);
+    description.triangles.data   = indicies.data();
+    description.triangles.stride = 3 * sizeof(uint32_t);
+
+    if (!description.isValid()) {
+        // todo
     }
 
-    desc.points.data   = buf.data();
-    desc.points.count  = buf.size();
-    desc.points.stride = sizeof(PxVec3);
-    
-    desc.triangles.count  = indicies.size() / 3;
-    desc.triangles.data   = indicies.data();
-    desc.triangles.stride = 3 * sizeof(uint32_t);
+    PxDefaultMemoryOutputStream       writeBuffer{};
+    PxTriangleMeshCookingResult::Enum result{};
 
-    auto b =cooking->validateTriangleMesh(desc);
-    if (!b) {
-        throw;
+    if (!cooking->cookTriangleMesh(description, writeBuffer, &result)) {
+        // todo
     }
 
-    return cooking->createTriangleMesh(desc, physics->getPhysicsInsertionCallback());
+    PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());
+    return physics->createTriangleMesh(readBuffer);
 }
 
 physx::PxMaterial* RoulleteController::CreateMaterial() {
     auto* physics = Physics::Instance().GetPhysics();
     return physics->createMaterial(roulleteMaterial.StaticFriction, roulleteMaterial.DynamicFriction, roulleteMaterial.Restitution);
+}
+
+void RoulleteController::UpdateFloatableMesh(physx::PxRigidStatic* rigid) {
+    auto transform = rigid->getGlobalPose();
+    transform.rotate({ 0.f, glm::radians<float>(rotatorParameter.CurrentAngle), 0.f });
+    rigid->setGlobalPose(transform);
 }
