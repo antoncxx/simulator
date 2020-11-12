@@ -82,6 +82,6 @@ void App::DrawPhysicsDebugWorld(float delta) {
 
 void App::SimulationStep(float dt) {
     auto* scene = Physics::Instance().GetScene();
-    scene->simulate(2.5 * dt);
+    scene->simulate(2.5f * dt);
     scene->fetchResults(true);
 }

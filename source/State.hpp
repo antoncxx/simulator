@@ -24,5 +24,5 @@ public:
     [[nodiscard]] inline bool IsIdle() const noexcept { return currentState == IDLE; }
     [[nodiscard]] inline bool IsMathTest() const noexcept { return currentState == MATH_TEST; }
 
-    void SetState(SimulatorState newState) noexcept { currentState == newState; }
+    void SetState(SimulatorState newState) noexcept { currentState = newState; }
 };

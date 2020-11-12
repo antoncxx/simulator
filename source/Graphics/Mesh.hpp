@@ -6,6 +6,7 @@
 
 #include "Shader.hpp"
 #include "UI.hpp"
+#include "BoundingBox.hpp"
 
 struct Vertex {
     glm::vec3 Position;
@@ -21,6 +22,8 @@ class Mesh final : public UIListener {
     uint32_t VertexArrayObject, VertexBufferObject, ElementBufferObject;
 
     bool visible;
+    bool drawBox;
+    BoundingBox box;
 public:
     explicit Mesh(const std::string& name, std::vector<Vertex>&& verticies, std::vector<uint32_t>&& indicies) noexcept;
     Mesh(const Mesh&) = default;

@@ -1,11 +1,17 @@
 #pragma once
-#include "Mesh.hpp"
+#include <memory>
 #include "Shader.hpp"
 
-class BoundingBox {
+struct BoundingBox {
+private:
+    glm::vec3 size;
     glm::vec3 center;
-    float w, l, h;
+
+    uint32_t vbo{}, ibo{}, vao{};
 public:
-    explicit BoundingBox(const glm::vec3& center, float w, float l, float h);
+    BoundingBox() = default;
+    BoundingBox(const glm::vec3& center, const glm::vec3& size);
+
     void Draw(const std::shared_ptr<Shader>& shader) const;
+    void Cleanup();
 };

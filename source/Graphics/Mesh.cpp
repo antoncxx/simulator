@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <algorithm>
+#include <iostream>
 
 Mesh::Mesh(const std::string& name,
     std::vector<Vertex>&& vertices, 
@@ -9,12 +10,15 @@ Mesh::Mesh(const std::string& name,
     : name(name)
     , vertices(std::move(vertices))
     , indices(std::move(indices))
-    , visible(true) {
+    , visible(true)
+    , drawBox(false) {
     SetupMesh();
     SetupBoundingBox();
 }
 
 void Mesh::Cleanup() {
+    box.Cleanup();
+
     glDeleteVertexArrays(1, &VertexArrayObject);
 
     glDeleteBuffers(1, &VertexBufferObject);
@@ -45,15 +49,15 @@ void Mesh::SetupMesh() {
 
 void Mesh::SetupBoundingBox() {
     const auto fx = [](const Vertex& v1, const Vertex& v2) {
-        return v1.Position.x < v1.Position.x;
+        return v1.Position.x < v2.Position.x;
     };
 
     const auto fy = [](const Vertex& v1, const Vertex& v2) {
-        return v1.Position.x < v1.Position.x;
+        return v1.Position.y < v2.Position.y;
     };
 
     const auto fz = [](const Vertex& v1, const Vertex& v2) {
-        return v1.Position.x < v1.Position.x;
+        return v1.Position.z < v2.Position.z;
     };
 
     auto xpair = std::minmax_element(vertices.cbegin(), vertices.cend(), fx);
@@ -64,20 +68,35 @@ void Mesh::SetupBoundingBox() {
 
     glm::vec3 center{
         (xpair.second->Position.x + xpair.first->Position.x) / 2,
-        (xpair.second->Position.y + xpair.first->Position.y) / 2,
-        (xpair.second->Position.z + xpair.first->Position.z) / 2
+        (ypair.second->Position.y + ypair.first->Position.y) / 2,
+        (zpair.second->Position.z + zpair.first->Position.z) / 2
     };
     
+    glm::vec3 size{
+        (xpair.second->Position.x - xpair.first->Position.x),
+        (ypair.second->Position.y - ypair.first->Position.y),
+        (zpair.second->Position.z - zpair.first->Position.z)
+    };
 
+    box = BoundingBox(center, size);
 }
 
 void Mesh::Draw(const std::shared_ptr<Shader>& shader) const {
     glBindVertexArray(VertexArrayObject);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+
+    if (drawBox) {
+        box.Draw(shader);
+    }
 }
 
 void Mesh::OnUIUpdate() {
     std::string title = "Mesh " + name;
-    ImGui::Checkbox(title.c_str(), &visible);
+    ImGui::PushID(title.c_str());
+    ImGui::Text(title.c_str());
+    ImGui::Checkbox("Visible", &visible);
+    ImGui::Checkbox("Draw bounding box", &drawBox);
+    ImGui::Separator();
+    ImGui::PopID();
 }

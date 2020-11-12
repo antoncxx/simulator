@@ -10,10 +10,10 @@ physx::PxTriangleMesh* PXConverter::ConvertMesh(const Mesh& mesh, physx::PxPhysi
 
 
     description.points.data   = vertices.data();
-    description.points.count  = vertices.size();
+    description.points.count  = static_cast<PxU32>(vertices.size());
     description.points.stride = sizeof(Vertex);
 
-    description.triangles.count  = PxU32(indicies.size() / 3);
+    description.triangles.count  = static_cast<PxU32>(indicies.size() / 3);
     description.triangles.data   = indicies.data();
     description.triangles.stride = 3 * sizeof(uint32_t);
 
