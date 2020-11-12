@@ -25,7 +25,8 @@ void BallController::CreatePhysics() {
 
     auto* material = CreateMaterial();
 
-    rigidBody = PxCreateDynamic(*physics, PxTransform(3, 50, 3), PxSphereGeometry(1.f), *material, 32.f);
+    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *material, 32.f);
+    rigidBody->setLinearVelocity({ 0,0,-30 });
     scene->addActor(*rigidBody);
 }
 
@@ -64,7 +65,8 @@ void BallController::Update(float delta) {
 }
 
 void BallController::Reset() {
-    rigidBody->setLinearVelocity({ 0, 0, 0 });
-    rigidBody->setGlobalPose(physx::PxTransform(3, 50, 3));
+    rigidBody->setLinearVelocity({ 0,0,-(float)(rand() % 40 + 10) });
+    rigidBody->setAngularVelocity({ 0,0,0 });
+    rigidBody->setGlobalPose(physx::PxTransform(33, 16, 20));
 }
 

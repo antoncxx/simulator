@@ -13,8 +13,8 @@ namespace {
         glm::vec3 up;
         glm::vec3 worldUp;
 
-        float yaw{ -90.f };
-        float pitch{ 0.f };
+        float yaw{ -100.f };
+        float pitch{ -40.f };
 
         float as{};
         float fov{};

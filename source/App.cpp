@@ -13,7 +13,7 @@ void App::Initialize() {
     shader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
     debug_shader = ResourceManager::Instance().CreateShader("DebugShader", "Resources/Shaders/Debug.vs", "Resources/Shaders/Debug.fs");
     
-    camera.reset(new Camera({ 0.f,35.f, 100.f }));
+    camera.reset(new Camera({ 10.f, 80.f, 80.f }));
 
     camera->SetAspectRatio(1.75f);
     camera->SetFov(45.f);
@@ -82,6 +82,6 @@ void App::DrawPhysicsDebugWorld(float delta) {
 
 void App::SimulationStep(float dt) {
     auto* scene = Physics::Instance().GetScene();
-    scene->simulate(dt);
+    scene->simulate(2.5 * dt);
     scene->fetchResults(true);
 }

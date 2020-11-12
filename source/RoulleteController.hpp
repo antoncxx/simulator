@@ -4,7 +4,7 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ .2f };
+    float AngulatVelocity{ 1.0f };
     float CurrentAngle{ 0.f };
 };
 
