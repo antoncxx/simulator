@@ -7,6 +7,7 @@
 
 #include "Shader.hpp"
 #include "Model.hpp"
+#include "Texture.hpp"
 
 class ResourceManager {
     using ResourcePtr = std::shared_ptr<GraphicalResource>;
@@ -22,6 +23,8 @@ public:
 
     [[nodiscard]] std::shared_ptr<Model> CreateModel(const std::string& name,
         const std::filesystem::path& modelSource);
+
+    [[nodiscard]] std::shared_ptr<Texture> CreateTexture(const std::string name, const std::filesystem::path& texturePath);
 
     [[nodiscard]] std::optional<ResourcePtr> GetResource(const std::string& name);
     void RemoveResource(const std::string& name);

@@ -7,10 +7,12 @@
 #include "Shader.hpp"
 #include "UI.hpp"
 #include "BoundingBox.hpp"
+#include "Texture.hpp"
 
 struct Vertex {
     glm::vec3 Position;
     glm::vec3 Normal;
+    glm::vec2 TextureCoordinate;
 };
 
 class Mesh final : public UIListener { 
@@ -24,8 +26,10 @@ class Mesh final : public UIListener {
     bool visible;
     bool drawBox;
     BoundingBox box;
+
+    std::shared_ptr<Texture> texture{};
 public:
-    explicit Mesh(const std::string& name, std::vector<Vertex>&& verticies, std::vector<uint32_t>&& indicies) noexcept;
+    explicit Mesh(const std::string& name, std::vector<Vertex>&& verticies, std::vector<uint32_t>&& indicies, const std::shared_ptr<Texture>& texture) noexcept;
     Mesh(const Mesh&) = default;
     Mesh(Mesh&&) = default;
     ~Mesh() = default;

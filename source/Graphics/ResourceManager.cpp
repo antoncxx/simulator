@@ -44,7 +44,7 @@ ResourceManager::CreateShader(
 ResourceManager::CreateModel(const std::string& name,
     const std::filesystem::path& modelSource) {
     Assimp::Importer importer;
-    const auto* scene = importer.ReadFile(modelSource.string(), aiProcess_Triangulate | aiProcessPreset_TargetRealtime_MaxQuality);
+    const auto* scene = importer.ReadFile(modelSource.string(), aiProcess_Triangulate);
 
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         throw std::runtime_error(importer.GetErrorString());
@@ -56,6 +56,16 @@ ResourceManager::CreateModel(const std::string& name,
     storage.emplace(name, instance);
     return instance;
 }
+
+[[nodiscard]] std::shared_ptr<Texture> 
+ResourceManager::CreateTexture(
+    const std::string name, 
+    const std::filesystem::path& texturePath) {
+    auto texture = Texture::Create(texturePath);
+    storage.emplace(name, texture);
+    return texture;
+}
+
 
 [[nodiscard]] std::optional<ResourceManager::ResourcePtr>
 ResourceManager::GetResource(const std::string& name) {

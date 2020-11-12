@@ -6,12 +6,14 @@
 
 Mesh::Mesh(const std::string& name,
     std::vector<Vertex>&& vertices, 
-    std::vector<uint32_t>&& indices) noexcept
+    std::vector<uint32_t>&& indices,
+    const std::shared_ptr<Texture>& texture) noexcept
     : name(name)
     , vertices(std::move(vertices))
     , indices(std::move(indices))
     , visible(true)
-    , drawBox(false) {
+    , drawBox(false)
+    , texture(texture) {
     SetupMesh();
     SetupBoundingBox();
 }
@@ -43,6 +45,9 @@ void Mesh::SetupMesh() {
 
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, Normal)));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TextureCoordinate));
 
     glBindVertexArray(0);
 }
@@ -82,6 +87,10 @@ void Mesh::SetupBoundingBox() {
 }
 
 void Mesh::Draw(const std::shared_ptr<Shader>& shader) const {
+    if (texture != nullptr) {
+        texture->Bind(0);
+    }
+
     glBindVertexArray(VertexArrayObject);
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size()), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

@@ -13,6 +13,9 @@
     <Filter Include="Source\Physics">
       <UniqueIdentifier>{b013f9a7-4b77-4437-9ce5-4fb553017857}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\STBI">
+      <UniqueIdentifier>{87b529d5-1dfb-47be-97db-ebb0e7638252}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\source\main.cpp">
@@ -83,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="..\source\Graphics\BoundingBox.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Graphics\Texture.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\STBI\stb_vorbis.c">
+      <Filter>Source\STBI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +166,72 @@
     </ClInclude>
     <ClInclude Include="..\source\Graphics\BoundingBox.hpp">
       <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Graphics\Texture.hpp">
+      <Filter>Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_c_lexer.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_connected_components.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_divide.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_ds.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_dxt.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_easy_font.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_herringbone_wang_tile.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_image.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_image_resize.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_image_write.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_include.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_leakcheck.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_perlin.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_rect_pack.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_sprintf.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_textedit.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_tilemap_editor.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_truetype.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stb_voxel_render.h">
+      <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\STBI\stretchy_buffer.h">
+      <Filter>Source\STBI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

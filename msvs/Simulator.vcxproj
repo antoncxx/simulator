@@ -101,6 +101,7 @@
     <ClCompile Include="..\source\Graphics\Model.cpp" />
     <ClCompile Include="..\source\Graphics\ResourceManager.cpp" />
     <ClCompile Include="..\source\Graphics\Shader.cpp" />
+    <ClCompile Include="..\source\Graphics\Texture.cpp" />
     <ClCompile Include="..\source\Graphics\UI.cpp" />
     <ClCompile Include="..\source\ImGui\imgui.cpp" />
     <ClCompile Include="..\source\ImGui\imgui_demo.cpp" />
@@ -112,6 +113,7 @@
     <ClCompile Include="..\source\Physics\Physics.cpp" />
     <ClCompile Include="..\source\RoulleteController.cpp" />
     <ClCompile Include="..\source\State.cpp" />
+    <ClCompile Include="..\source\STBI\stb_vorbis.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\App.hpp" />
@@ -126,6 +128,7 @@
     <ClInclude Include="..\source\Graphics\Model.hpp" />
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp" />
     <ClInclude Include="..\source\Graphics\Shader.hpp" />
+    <ClInclude Include="..\source\Graphics\Texture.hpp" />
     <ClInclude Include="..\source\Graphics\UI.hpp" />
     <ClInclude Include="..\source\ImGui\imconfig.h" />
     <ClInclude Include="..\source\ImGui\imgui.h" />
@@ -138,6 +141,27 @@
     <ClInclude Include="..\source\Physics\Physics.hpp" />
     <ClInclude Include="..\source\RoulleteController.hpp" />
     <ClInclude Include="..\source\State.hpp" />
+    <ClInclude Include="..\source\STBI\stb.h" />
+    <ClInclude Include="..\source\STBI\stb_connected_components.h" />
+    <ClInclude Include="..\source\STBI\stb_c_lexer.h" />
+    <ClInclude Include="..\source\STBI\stb_divide.h" />
+    <ClInclude Include="..\source\STBI\stb_ds.h" />
+    <ClInclude Include="..\source\STBI\stb_dxt.h" />
+    <ClInclude Include="..\source\STBI\stb_easy_font.h" />
+    <ClInclude Include="..\source\STBI\stb_herringbone_wang_tile.h" />
+    <ClInclude Include="..\source\STBI\stb_image.h" />
+    <ClInclude Include="..\source\STBI\stb_image_resize.h" />
+    <ClInclude Include="..\source\STBI\stb_image_write.h" />
+    <ClInclude Include="..\source\STBI\stb_include.h" />
+    <ClInclude Include="..\source\STBI\stb_leakcheck.h" />
+    <ClInclude Include="..\source\STBI\stb_perlin.h" />
+    <ClInclude Include="..\source\STBI\stb_rect_pack.h" />
+    <ClInclude Include="..\source\STBI\stb_sprintf.h" />
+    <ClInclude Include="..\source\STBI\stb_textedit.h" />
+    <ClInclude Include="..\source\STBI\stb_tilemap_editor.h" />
+    <ClInclude Include="..\source\STBI\stb_truetype.h" />
+    <ClInclude Include="..\source\STBI\stb_voxel_render.h" />
+    <ClInclude Include="..\source\STBI\stretchy_buffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

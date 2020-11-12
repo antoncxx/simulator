@@ -1,9 +1,14 @@
 #include "Model.hpp"
+#include "ResourceManager.hpp"
 #include <GL/glew.h>
 
 namespace {
-    inline glm::vec3 ToGLMVector(const aiVector3D& vector) noexcept {
+    inline glm::vec3 ToGLMVector3(const aiVector3D& vector) noexcept {
         return { vector.x, vector.y, vector.z };
+    }
+
+    inline glm::vec2 ToGLMVector2(const aiVector2D& vector) noexcept {
+        return { vector.x, vector.y };
     }
 }
 
@@ -38,6 +43,8 @@ void Model::InitalizeFromScene(const aiScene* scene) {
 }
 
 Mesh Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
+    // todo spit this function
+
     std::vector<Vertex> vertices;
     vertices.reserve(mesh->mNumVertices);
 
@@ -46,9 +53,14 @@ Mesh Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
 
     for (size_t i = 0u; i < mesh->mNumVertices; ++i) {
         Vertex vertex;
-        vertex.Position = ToGLMVector(mesh->mVertices[i]);
+        vertex.Position = ToGLMVector3(mesh->mVertices[i]);
+
         if (mesh->HasNormals()) {
-            vertex.Normal = ToGLMVector(mesh->mNormals[i]);
+            vertex.Normal = ToGLMVector3(mesh->mNormals[i]);
+        }
+
+        if (mesh->HasTextureCoords(0)) {
+            vertex.TextureCoordinate = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
         }
 
         vertices.emplace_back(std::move(vertex));
@@ -62,7 +74,31 @@ Mesh Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
         }
     }
 
-    return Mesh(mesh->mName.C_Str(), std::move(vertices), std::move(indices));
+    auto* material = scene->mMaterials[mesh->mMaterialIndex];
+
+    uint32_t type{ 0 };
+    std::shared_ptr<Texture> texture{};
+
+    for (type = aiTextureType::aiTextureType_NONE; type < aiTextureType::aiTextureType_UNKNOWN; ++type) {
+        if (material->GetTextureCount(static_cast<aiTextureType>(type)) > 0) {
+            break;
+        }
+    }
+
+    if (type != aiTextureType::aiTextureType_UNKNOWN) {
+        aiString path{};
+        material->GetTexture(static_cast<aiTextureType>(type), 0, &path);
+        std::filesystem::path texturePath = path.C_Str();
+        std::string name = texturePath.filename().string();
+
+        if (auto resource = ResourceManager::Instance().GetResource(name); resource.has_value()) {
+            texture = std::dynamic_pointer_cast<Texture>(resource.value());
+        } else {
+            texture = ResourceManager::Instance().CreateTexture(name, texturePath);
+        }
+    }
+
+    return Mesh(mesh->mName.C_Str(), std::move(vertices), std::move(indices), texture);
 }
 
 void Model::ProcessNode(const aiNode* node, const aiScene* scene) {
