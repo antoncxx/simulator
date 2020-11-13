@@ -88,7 +88,7 @@ void App::DrawComponents(float delta) {
     skyboxShader->SetUniform("projection", camera->ProjectionMatrix());
 
     {
-        auto scale = std::sqrt(std::pow(camera->GetFarPlane(), 2) * 2) / 3;
+        auto scale = std::sqrt(std::pow(camera->GetFarPlane(), 2) * 2) / (2 * std::sqrt(2));
         auto model = glm::scale(glm::mat4(1.f), glm::vec3{ scale, scale, scale });
         skyboxShader->SetUniform("model", model);
     }

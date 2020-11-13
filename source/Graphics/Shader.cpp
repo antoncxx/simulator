@@ -19,7 +19,7 @@ namespace {
         case CHECK_SHADER: {
             glGetShaderiv(id, GL_COMPILE_STATUS, &success);
             if (!success) {
-                glGetShaderInfoLog(id, buffer.size(), nullptr, buffer.data()); // todo : cleanup
+                glGetShaderInfoLog(id, buffer.size(), nullptr, buffer.data());
                 throw std::runtime_error(buffer.data());
             }
             break;

@@ -12,6 +12,7 @@ struct BallMaterial {
 class BallController : public UIListener {
     std::shared_ptr<Model>  model{};
     physx::PxRigidDynamic*  rigidBody{};
+    physx::PxMaterial*      xMaterial{};
     BallMaterial            ballMaterial{};
 public:
     BallController();

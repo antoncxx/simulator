@@ -20,4 +20,7 @@ private:
     static std::shared_ptr<Skybox> Create(const std::vector<std::filesystem::path>& faces);
     
     friend ResourceManager;
+
+    void GenTextures(const std::vector<std::filesystem::path>& faces);
+    void GenData();
 };

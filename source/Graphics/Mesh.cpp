@@ -69,8 +69,6 @@ void Mesh::SetupBoundingBox() {
     auto ypair = std::minmax_element(vertices.cbegin(), vertices.cend(), fy);
     auto zpair = std::minmax_element(vertices.cbegin(), vertices.cend(), fz);
 
-    // todo: validate results
-
     glm::vec3 center{
         (xpair.second->Position.x + xpair.first->Position.x) / 2,
         (ypair.second->Position.y + ypair.first->Position.y) / 2,

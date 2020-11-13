@@ -15,6 +15,20 @@ void BallController::OnUIUpdate() {
     if (ImGui::Button("Reset")) {
         Reset();
     }
+
+    ImGui::Text("Material:");
+
+    bool materialChanged{ false };
+    materialChanged |= ImGui::SliderFloat("Static friction", &ballMaterial.StaticFriction, 0.f, 2.f);
+    materialChanged |= ImGui::SliderFloat("Dynamic friction", &ballMaterial.DynamicFriction, 0.f, 2.f);
+    materialChanged |= ImGui::SliderFloat("Restitution", &ballMaterial.Restitution, 0.f, 1.f);
+
+    if (materialChanged) {
+        xMaterial->setStaticFriction(ballMaterial.StaticFriction);
+        xMaterial->setDynamicFriction(ballMaterial.DynamicFriction);
+        xMaterial->setRestitution(ballMaterial.Restitution);
+    }
+
     ImGui::End();
 }
 
@@ -23,10 +37,11 @@ void BallController::CreatePhysics() {
     auto* scene   = Physics::Instance().GetScene();
     auto* physics = Physics::Instance().GetPhysics();
 
-    auto* material = CreateMaterial();
+    xMaterial = CreateMaterial();
 
-    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *material, 32.f);
-    rigidBody->setLinearVelocity({ 0,0,-30 });
+    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *xMaterial, 32.f);
+    
+    Reset();
     scene->addActor(*rigidBody);
 }
 
