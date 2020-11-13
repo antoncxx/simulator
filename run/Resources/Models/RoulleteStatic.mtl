@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
 # Material Count: 3
 
-newmtl wheel_static_frame_wire_000000000
+newmtl OuterWheelTop
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -12,7 +12,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\dark_red.jpg
 
-newmtl wheel_static_frame_wire_000000000.001
+newmtl OuterWheelBottom
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -23,7 +23,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\marble-black.jpg
 
-newmtl wheel_static_frame_wire_000000000.002
+newmtl Diamonds
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000

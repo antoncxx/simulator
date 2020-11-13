@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
 # Material Count: 4
 
-newmtl wire_000000000.004
+newmtl WheelDynamic
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -12,7 +12,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\marble-black.jpg
 
-newmtl wire_000000000.005
+newmtl WheelDividers
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -23,7 +23,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\silver_texture.jpg
 
-newmtl wire_000000000.006
+newmtl CentralCross
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -34,7 +34,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\dark_red.jpg
 
-newmtl wire_204204204.001
+newmtl CentralCone
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.015117 0.000334
