@@ -1,7 +1,7 @@
 # Blender MTL File: 'None'
 # Material Count: 3
 
-newmtl wheel_static_frame_wire_000000000.009
+newmtl wheel_static_frame_wire_000000000
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -10,9 +10,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Resources\\Textures\\silver_texture.jpg
+map_Kd Resources\\Textures\\dark_red.jpg
 
-newmtl wheel_static_frame_wire_000000000.010
+newmtl wheel_static_frame_wire_000000000.001
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -23,7 +23,7 @@ d 1.000000
 illum 2
 map_Kd Resources\\Textures\\marble-black.jpg
 
-newmtl wheel_static_frame_wire_000000000.012
+newmtl wheel_static_frame_wire_000000000.002
 Ns 31.999996
 Ka 1.000000 1.000000 1.000000
 Kd 0.000000 0.000000 0.000000
@@ -32,4 +32,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd Resources\\Textures\\dark_red.jpg
+map_Kd Resources\\Textures\\silver_texture.jpg

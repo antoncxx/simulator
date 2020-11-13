@@ -76,6 +76,17 @@ void Shader::SetUniform(const std::string& name, const glm::mat4& matrix) {
     }
 }
 
+void Shader::SetUniform(const std::string& name, const glm::vec3& vec3) {
+    if (auto iter = chache.find(name); iter != chache.end()) {
+        glUniform3fv(iter->second, 1, glm::value_ptr(vec3));
+    }
+    else {
+        const auto location = glGetUniformLocation(id, name.data());
+        glUniform3fv(iter->second, 1, glm::value_ptr(vec3));
+        chache.insert({ name, location });
+    }
+}
+
 void Shader::Compile(std::string_view vertexSource, std::string_view fragmentSource) {
     auto vs = CompileShader(GL_VERTEX_SHADER,   vertexSource.data());
     auto fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.data());

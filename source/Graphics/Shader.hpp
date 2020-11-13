@@ -16,6 +16,7 @@ class Shader final : public GraphicalResource {
 public:
     void Use() const;
     void SetUniform(const std::string& name, const glm::mat4& matrix);
+    void SetUniform(const std::string& name, const glm::vec3& vec3);
 
     inline auto Id() const noexcept { return id; }
 

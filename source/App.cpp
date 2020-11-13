@@ -73,15 +73,20 @@ void App::UpdateComponets(float delta) {
 
 void App::DrawComponents(float delta) {
     shader->Use();
+    skybox->Bind();
+
     shader->SetUniform("view",       camera->ViewMatrix());
+    shader->SetUniform("cameraPos",  camera->GetCameraPosition());
     shader->SetUniform("projection", camera->ProjectionMatrix());
 
     roulleteController->Draw(shader);
     ballController->Draw(shader);
 
     skyboxShader->Use();
+
     skyboxShader->SetUniform("view", glm::mat4(glm::mat3(camera->ViewMatrix())));
     skyboxShader->SetUniform("projection", camera->ProjectionMatrix());
+
     {
         auto scale = std::sqrt(std::pow(camera->GetFarPlane(), 2) * 2) / 3;
         auto model = glm::scale(glm::mat4(1.f), glm::vec3{ scale, scale, scale });

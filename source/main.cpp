@@ -4,8 +4,13 @@
 int main() {
     App app;
     assert(app.IsCreated());
-    app.Initialize();
-    app.Run();
-    app.Finalize();
+
+    try {
+        app.Initialize();
+        app.Run();
+        app.Finalize();
+    } catch (std::exception& e) {
+        std::cout << e.what() << std::endl;
+    }
     return 0;
 }
