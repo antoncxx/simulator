@@ -4,14 +4,14 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 1.0f };
+    float AngulatVelocity{ 0.0f };
     float CurrentAngle{ 0.f };
 };
 
 struct RoulleteMaterial {
-    float StaticFriction{ 0.5f };
-    float DynamicFriction{ 0.5f };
-    float Restitution{ 0.6f };
+    float StaticFriction{ 0.1f };
+    float DynamicFriction{ 0.1f };
+    float Restitution{ 0.1f };
 };
 
 enum class ModelProcessingFlag {
@@ -37,6 +37,8 @@ public:
     void OnUIUpdate() override;
     void Update(float delta);
     void Draw(const std::shared_ptr<Shader>& shader);
+
+    glm::vec3 GetStartPoint(float ballRadius);
 private:
     void Initialize();
     void CreatePhysics();

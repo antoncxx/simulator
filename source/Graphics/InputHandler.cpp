@@ -102,6 +102,15 @@ public:
         KeyboardButton index = decodeGLFWKeyboardButton(key);
         if (index == KeyboardButton::Unsupported) { return; }
 
+        if (action == GLFW_PRESS) {
+            auto iter = instance.keyboardCallbacks.find(index);
+            if (iter != instance.keyboardCallbacks.end()) {
+                for (auto callback : iter->second) {
+                    callback();
+                }
+            }
+        }
+
         instance.keyboardState.buttons[static_cast<size_t>(index)].pressed = (action == GLFW_PRESS) || (action == GLFW_REPEAT);
     }
 };
@@ -118,6 +127,10 @@ void InputHandler::Setup(GLFWwindow* window) {
     glfwSetMouseButtonCallback(window, &InputsCallbacksWrapper::OnMouseButtonCallback);
     glfwSetCursorPosCallback(window, &InputsCallbacksWrapper::OnMouseMoveCallback);
     glfwSetKeyCallback(window, &InputsCallbacksWrapper::OnKeyBoardCallback);
+}
+
+void InputHandler::RegisterKeyboardCallback(KeyboardButton button, KeyCallback callback) {
+    keyboardCallbacks[button].push_back(callback);
 }
 
 

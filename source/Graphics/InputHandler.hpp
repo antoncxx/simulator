@@ -2,6 +2,8 @@
 
 #include <list>
 #include <array>
+#include <functional>
+#include <map>
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -31,17 +33,24 @@ struct KeyboardState {
 
 class InputsCallbacksWrapper;
 
+using KeyCallback = std::function<void(void)>;
+
 class InputHandler {
     explicit InputHandler() = default;
 
     MouseState              mouseState{};
     KeyboardState           keyboardState{};
+
+    std::map<KeyboardButton, std::list<KeyCallback>> keyboardCallbacks;
+
 public:
     static InputHandler& Instance() noexcept;
     void Setup(GLFWwindow* window);
 
     inline const auto MouseState() const noexcept { return mouseState; }
     inline const auto KeyboardState() const noexcept { return keyboardState; }
+
+    void RegisterKeyboardCallback(KeyboardButton button, KeyCallback callback);
 
     friend InputsCallbacksWrapper;
 };

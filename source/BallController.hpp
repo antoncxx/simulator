@@ -6,7 +6,7 @@
 struct BallMaterial {
     float StaticFriction{ 0.1f };
     float DynamicFriction{ 0.1f };
-    float Restitution{ 0.6f };
+    float Restitution{ 0.1f };
 };
 
 class BallController : public UIListener {
@@ -22,6 +22,7 @@ public:
     void Update(float delta);
     void Draw(const std::shared_ptr<Shader>& shader);
 
+    void ShootBall(glm::vec3 from, glm::vec3 linearSpeed);
     static std::shared_ptr<BallController> Create();
 private:
     void Initialize();

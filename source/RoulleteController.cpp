@@ -93,9 +93,6 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
 
         auto* rigidStatic = physics->createRigidStatic(PxTransform(PxVec3(0.f, 0.f, 0.f)));
         auto* shape = physics->createShape(geometry, *xMaterial);
-        
-        shape->setContactOffset(0.01f);
-        shape->setRestOffset(-0.01f);
         rigidStatic->attachShape(*shape);
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
@@ -110,4 +107,36 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
 physx::PxMaterial* RoulleteController::CreateMaterial() {
     auto* physics = Physics::Instance().GetPhysics();
     return physics->createMaterial(roulleteMaterial.StaticFriction, roulleteMaterial.DynamicFriction, roulleteMaterial.Restitution);
+}
+
+glm::vec3 RoulleteController::GetStartPoint(float ballRadius) {
+    auto outerWheel = staticRoullete->GetMeshByName("OuterWheelBottom");
+    auto innerWheel = dynamicRoullete->GetMeshByName("WheelDynamic");
+
+    if (!outerWheel.has_value() || !innerWheel.has_value()) {
+        throw std::runtime_error("Failed to get model by name");
+    }
+
+    auto outerBox = outerWheel.value().GetBoundingBox();
+    auto innerBox = innerWheel.value().GetBoundingBox();
+
+    auto innerSize   = innerBox.GetSize();
+    auto innerCenter = innerBox.GetCenterPoint();
+
+    auto outerSize   = outerBox.GetSize();
+    auto outerCenter = outerBox.GetCenterPoint();
+
+    auto xi = innerCenter.x + innerSize.x / 2;
+    auto yi = innerCenter.y + innerSize.y / 2;
+
+    auto xo = outerCenter.x + outerSize.x / 2;
+    auto yo = outerCenter.y + outerSize.y / 2;
+
+    auto angle = std::atan((yo - yi) / (xo - xi));
+
+    auto xstart = xo - ballRadius;
+    auto ystart = yo + ballRadius * (1 - std::tan(angle));
+    auto zstart = outerCenter.z;
+
+    return { xstart, ystart, zstart };
 }

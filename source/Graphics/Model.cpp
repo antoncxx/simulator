@@ -130,3 +130,16 @@ void Model::OnUIUpdate() {
 
     ImGui::Separator();
 }
+
+std::optional<Mesh> Model::GetMeshByName(const std::string& name) const {
+    auto it = std::find_if(meshes.cbegin(), meshes.cend(), 
+        [&](const auto& mesh) {
+            return mesh.GetName() == name;
+        });
+
+    if (it != meshes.cend()) {
+        return { *it };
+    } else {
+        std::nullopt;
+    }
+}

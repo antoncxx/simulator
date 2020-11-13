@@ -36,12 +36,14 @@ public:
 
     void Draw(const std::shared_ptr<Shader> &shader) const;
     void Cleanup();
-    bool IsVisible() const noexcept { return visible; }
+    [[nodiscard]] bool IsVisible() const noexcept { return visible; }
     void OnUIUpdate() override;
 
-    auto GetVertices() const noexcept { return vertices; }
-    auto GetIndices() const noexcept { return indices; }
+    [[nodiscard]] inline auto GetVertices() const noexcept { return vertices; }
+    [[nodiscard]] inline auto GetIndices() const noexcept { return indices; }
 
+    [[nodiscard]] inline auto GetName() const noexcept { return name; }
+    [[nodiscard]] inline auto GetBoundingBox() const noexcept { return box; }
 private:
     void SetupMesh();
     void SetupBoundingBox();

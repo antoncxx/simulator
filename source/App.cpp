@@ -32,6 +32,8 @@ void App::Initialize() {
 
     roulleteController = RoulleteController::Create();
     ballController     = BallController::Create();
+
+    InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this));
 }
 
 void App::Finalize() {
@@ -103,12 +105,16 @@ void App::OnUIUpdate() {
 }
 
 void App::DrawPhysicsDebugWorld(float delta) {
-    // todo
-
+    
 }
 
 void App::SimulationStep(float dt) {
     auto* scene = Physics::Instance().GetScene();
     scene->simulate(dt);
     scene->fetchResults(true);
+}
+
+void App::StartNewRound() {
+    auto position = roulleteController->GetStartPoint(1.f);
+    ballController->ShootBall(position, {0, 0, 50});
 }

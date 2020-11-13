@@ -4,6 +4,7 @@
 #include "Mesh.hpp"
 #include "UI.hpp"
 
+#include <optional>
 #include <assimp/scene.h>
 
 class ResourceManager;
@@ -22,11 +23,12 @@ public:
     void Draw(const std::shared_ptr<Shader>& shader) const;
     void Cleanup() override;
 
-    bool IsVisible() const noexcept { return visible; }
+    [[nodiscard]] bool IsVisible() const noexcept { return visible; }
 
     void OnUIUpdate() override;
 
-    auto GetMeshes() const noexcept { return meshes; }
+    [[nodiscard]] auto GetMeshes() const noexcept { return meshes; }
+    [[nodiscard]] std::optional<Mesh> GetMeshByName(const std::string& name) const;
 private:
     void InitalizeFromScene(const aiScene* scene);
     void ProcessNode(const aiNode* node, const aiScene* scene);

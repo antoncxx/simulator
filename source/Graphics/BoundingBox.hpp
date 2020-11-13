@@ -14,4 +14,7 @@ public:
 
     void Draw(const std::shared_ptr<Shader>& shader) const;
     void Cleanup();
+
+    inline auto GetSize() const noexcept { return size; }
+    inline auto GetCenterPoint() const noexcept { return center; }
 };

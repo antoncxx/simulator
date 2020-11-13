@@ -34,7 +34,6 @@ void Physics::StartUp() {
 
     {
         auto scale = PxTolerancesScale();
-        scale.speed = 20.f;
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
         assert(physics);
 
@@ -62,7 +61,7 @@ void Physics::StartUp() {
             pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
         }
 
-        scene->setVisualizationParameter(PxVisualizationParameter::eSCALE, 1.0f);
+        scene->setVisualizationParameter(PxVisualizationParameter::eSCALE,      1.0f);
         scene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
     }
 }

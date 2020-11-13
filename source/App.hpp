@@ -35,4 +35,5 @@ private:
     void DrawComponents(float delta);
     void DrawPhysicsDebugWorld(float delta);
     void SimulationStep(float dt);
+    void StartNewRound();
 };

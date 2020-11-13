@@ -1,6 +1,6 @@
 #include "BallController.hpp"
+#include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 BallController::BallController() {
     UI::Instance().RegisterListener(this);
@@ -38,8 +38,7 @@ void BallController::CreatePhysics() {
     auto* physics = Physics::Instance().GetPhysics();
 
     xMaterial = CreateMaterial();
-
-    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *xMaterial, 32.f);
+    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *xMaterial, 3.f);
     
     Reset();
     scene->addActor(*rigidBody);
@@ -73,15 +72,20 @@ physx::PxMaterial* BallController::CreateMaterial() {
 }
 
 void BallController::Update(float delta) {
-    //auto vel = rigidBody->getLinearVelocity();
-    //if (vel.magnitude() <= 1e-3) {
-    //    std::cout << "End\n";
-    //}
+
 }
 
 void BallController::Reset() {
-    rigidBody->setLinearVelocity({ 0,0,-(float)(rand() % 40 + 10) });
-    rigidBody->setAngularVelocity({ 0,0,0 });
-    rigidBody->setGlobalPose(physx::PxTransform(33, 16, 20));
+    rigidBody->setLinearVelocity({ 0.f, 0.f, 0.f });
+    rigidBody->setAngularVelocity({ 1.f, 1.f, 1.f });
+    rigidBody->setGlobalPose(physx::PxTransform(0.f, 40.f, 0.f));
+    rigidBody->clearForce();
+    rigidBody->clearTorque();
+}
+
+void BallController::ShootBall(glm::vec3 from, glm::vec3 linearSpeed) {
+    Reset();
+    rigidBody->setLinearVelocity(PXConverter::ConvertVector3(linearSpeed));
+    rigidBody->setGlobalPose(physx::PxTransform(PXConverter::ConvertVector3(from)));
 }
 
