@@ -46,6 +46,9 @@ public:
     void SetPlanes(float near, float far);
     void SetAspectRatio(float as);
 
+    inline auto GetCameraPosition() const noexcept { return data.position; }
+    inline auto GetFarPlane() const noexcept { return data.far; }
+
     void OnUIUpdate() override;
 private:
     void CalculateViewMatrix();

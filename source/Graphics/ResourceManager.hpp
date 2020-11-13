@@ -8,6 +8,7 @@
 #include "Shader.hpp"
 #include "Model.hpp"
 #include "Texture.hpp"
+#include "Skybox.hpp"
 
 class ResourceManager {
     using ResourcePtr = std::shared_ptr<GraphicalResource>;
@@ -26,7 +27,10 @@ public:
 
     [[nodiscard]] std::shared_ptr<Texture> CreateTexture(const std::string name, const std::filesystem::path& texturePath);
 
+    [[nodiscard]] std::shared_ptr<Skybox> CreateSkybox(const std::string& name, const std::vector<std::filesystem::path>& faces);
+
     [[nodiscard]] std::optional<ResourcePtr> GetResource(const std::string& name);
+
     void RemoveResource(const std::string& name);
     void Cleanup();   
 private:

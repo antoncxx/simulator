@@ -101,6 +101,7 @@
     <ClCompile Include="..\source\Graphics\Model.cpp" />
     <ClCompile Include="..\source\Graphics\ResourceManager.cpp" />
     <ClCompile Include="..\source\Graphics\Shader.cpp" />
+    <ClCompile Include="..\source\Graphics\Skybox.cpp" />
     <ClCompile Include="..\source\Graphics\Texture.cpp" />
     <ClCompile Include="..\source\Graphics\UI.cpp" />
     <ClCompile Include="..\source\ImGui\imgui.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\source\Graphics\Model.hpp" />
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp" />
     <ClInclude Include="..\source\Graphics\Shader.hpp" />
+    <ClInclude Include="..\source\Graphics\Skybox.hpp" />
     <ClInclude Include="..\source\Graphics\Texture.hpp" />
     <ClInclude Include="..\source\Graphics\UI.hpp" />
     <ClInclude Include="..\source\ImGui\imconfig.h" />

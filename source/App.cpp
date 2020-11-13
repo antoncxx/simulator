@@ -10,9 +10,20 @@ void App::Initialize() {
     UI::Instance().RegisterListener(this);
     Physics::Instance().StartUp();
 
-    shader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
-    debug_shader = ResourceManager::Instance().CreateShader("DebugShader", "Resources/Shaders/Debug.vs", "Resources/Shaders/Debug.fs");
+    shader       = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
+    skyboxShader = ResourceManager::Instance().CreateShader("SkyboxShader", "Resources/Shaders/Skybox.vs", "Resources/Shaders/Skybox.fs");
     
+    std::vector<std::filesystem::path> faces
+    {
+        "Resources\\Textures\\right.jpg",
+        "Resources\\Textures\\left.jpg",
+        "Resources\\Textures\\top.jpg",
+        "Resources\\Textures\\bottom.jpg",
+        "Resources\\Textures\\front.jpg",
+        "Resources\\Textures\\back.jpg"
+    };
+    skybox = ResourceManager::Instance().CreateSkybox("Sky", faces);
+
     camera.reset(new Camera({ 10.f, 80.f, 80.f }));
 
     camera->SetAspectRatio(1.75f);
@@ -62,11 +73,22 @@ void App::UpdateComponets(float delta) {
 
 void App::DrawComponents(float delta) {
     shader->Use();
-    shader->SetUniform("view", camera->ViewMatrix());
+    shader->SetUniform("view",       camera->ViewMatrix());
     shader->SetUniform("projection", camera->ProjectionMatrix());
 
     roulleteController->Draw(shader);
     ballController->Draw(shader);
+
+    skyboxShader->Use();
+    skyboxShader->SetUniform("view", glm::mat4(glm::mat3(camera->ViewMatrix())));
+    skyboxShader->SetUniform("projection", camera->ProjectionMatrix());
+    {
+        auto scale = std::sqrt(std::pow(camera->GetFarPlane(), 2) * 2) / 3;
+        auto model = glm::scale(glm::mat4(1.f), glm::vec3{ scale, scale, scale });
+        skyboxShader->SetUniform("model", model);
+    }
+
+    skybox->Draw(skyboxShader);
 }
 
 void App::OnUIUpdate() {
@@ -82,6 +104,6 @@ void App::DrawPhysicsDebugWorld(float delta) {
 
 void App::SimulationStep(float dt) {
     auto* scene = Physics::Instance().GetScene();
-    scene->simulate(2.5f * dt);
+    scene->simulate(dt);
     scene->fetchResults(true);
 }

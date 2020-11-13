@@ -93,6 +93,9 @@
     <ClCompile Include="..\source\STBI\stb_vorbis.c">
       <Filter>Source\STBI</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\Graphics\Skybox.cpp">
+      <Filter>Source\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Graphics\ResourceManager.hpp">
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="..\source\STBI\stretchy_buffer.h">
       <Filter>Source\STBI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Graphics\Skybox.hpp">
+      <Filter>Source\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

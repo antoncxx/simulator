@@ -4,6 +4,7 @@
 #include "Graphics/ResourceManager.hpp"
 #include "Graphics/InputHandler.hpp"
 #include "Graphics/Camera.hpp"
+#include "Graphics/Skybox.hpp"
 #include "RoulleteController.hpp"
 #include "BallController.hpp"
 #include "Physics/Physics.hpp"
@@ -12,10 +13,11 @@
 class App final : public BaseGraphicsApplication, public UIListener {
 private:
     std::shared_ptr<Shader> shader{};
-    std::shared_ptr<Shader> debug_shader{};
+    std::shared_ptr<Shader> skyboxShader{};
     std::shared_ptr<Camera> camera;
     std::shared_ptr<RoulleteController> roulleteController{};
     std::shared_ptr<BallController>     ballController{};
+    std::shared_ptr<Skybox>     skybox{ };
 
 public:
     explicit App() = default;

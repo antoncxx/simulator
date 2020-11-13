@@ -66,6 +66,14 @@ ResourceManager::CreateTexture(
     return texture;
 }
 
+[[nodiscard]] std::shared_ptr<Skybox>
+ResourceManager::CreateSkybox(const std::string& name,
+    const std::vector<std::filesystem::path>& faces) {
+    auto box = Skybox::Create(faces);
+    storage.emplace(name, box);
+    return box;
+}
+
 
 [[nodiscard]] std::optional<ResourceManager::ResourcePtr>
 ResourceManager::GetResource(const std::string& name) {

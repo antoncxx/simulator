@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 
+#define STB_IMAGE_IMPLEMENTATION
 #include "../STBI/stb_image.h"
 
 std::shared_ptr<Texture> Texture::Create(const std::filesystem::path& imagePath) {
