@@ -117,8 +117,8 @@ glm::vec3 RoulleteController::GetStartPoint(float ballRadius) {
         throw std::runtime_error("Failed to get model by name");
     }
 
-    auto outerBox = outerWheel.value().GetBoundingBox();
-    auto innerBox = innerWheel.value().GetBoundingBox();
+    auto outerBox = outerWheel.value()->GetBoundingBox();
+    auto innerBox = innerWheel.value()->GetBoundingBox();
 
     auto innerSize   = innerBox.GetSize();
     auto innerCenter = innerBox.GetCenterPoint();

@@ -71,15 +71,15 @@ void Model::Draw(const std::shared_ptr<Shader>& shader) const {
     shader->Use();
 
     for (const auto& mesh : meshes) {
-        if (mesh.IsVisible()) {
-            mesh.Draw(shader);
+        if (mesh->IsVisible()) {
+            mesh->Draw(shader);
         }
     }
 }
 
 void Model::Cleanup() {
     for (auto& mesh : meshes) {
-        mesh.Cleanup();
+        mesh->Cleanup();
     }
 
     meshes.clear();
@@ -90,7 +90,7 @@ void Model::InitalizeFromScene(const aiScene* scene) {
     ProcessNode(scene->mRootNode, scene);
 }
 
-Mesh Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
+std::shared_ptr<Mesh> Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
     std::vector<Vertex> vertices;
     vertices.reserve(mesh->mNumVertices);
 
@@ -103,7 +103,7 @@ Mesh Model::ProcessMesh(const aiMesh* mesh, const aiScene* scene) {
     auto* material = scene->mMaterials[mesh->mMaterialIndex];
 
     ProcessMeshTexture(mesh, material, texture);
-    return Mesh(mesh->mName.C_Str(), std::move(vertices), std::move(indices), texture);
+    return std::make_shared<Mesh>(mesh->mName.C_Str(), std::move(vertices), std::move(indices), texture);
 }
 
 void Model::ProcessNode(const aiNode* node, const aiScene* scene) {
@@ -124,17 +124,17 @@ void Model::OnUIUpdate() {
     std::string headerTitle = "Meshes (" + std::to_string(meshes.size()) + ")";
     if (ImGui::CollapsingHeader(headerTitle.c_str())) {
         for (auto& mesh : meshes) {
-            mesh.OnUIUpdate();
+            mesh->OnUIUpdate();
         }
     }
 
     ImGui::Separator();
 }
 
-std::optional<Mesh> Model::GetMeshByName(const std::string& name) const {
+std::optional<std::shared_ptr<Mesh>> Model::GetMeshByName(const std::string& name) const {
     auto it = std::find_if(meshes.cbegin(), meshes.cend(), 
         [&](const auto& mesh) {
-            return mesh.GetName() == name;
+            return mesh->GetName() == name;
         });
 
     if (it != meshes.cend()) {

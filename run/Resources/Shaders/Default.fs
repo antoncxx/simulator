@@ -7,7 +7,7 @@ in vec3 Normal;
 in vec3 FragPos;  
 
 uniform sampler2D Texture;
-uniform samplerCube skybox;
+//uniform samplerCube skybox;
 
 uniform vec3 cameraPos;
 

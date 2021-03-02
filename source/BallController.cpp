@@ -29,6 +29,7 @@ void BallController::OnUIUpdate() {
         xMaterial->setRestitution(ballMaterial.Restitution);
     }
 
+    ImGui::SliderFloat("Ball speed value: ", &ballSpeedValue, -50.f, 50.f);
     ImGui::End();
 }
 
@@ -38,10 +39,10 @@ void BallController::CreatePhysics() {
     auto* physics = Physics::Instance().GetPhysics();
 
     xMaterial = CreateMaterial();
-    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(1.f), *xMaterial, 3.f);
+    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(GetRadius()), *xMaterial, ballMaterial.Density);
     
-    Reset();
     scene->addActor(*rigidBody);
+    Reset();
 }
 
 std::shared_ptr<BallController> BallController::Create() {
@@ -83,9 +84,10 @@ void BallController::Reset() {
     rigidBody->clearTorque();
 }
 
-void BallController::ShootBall(glm::vec3 from, glm::vec3 linearSpeed) {
+void BallController::ShootBall(glm::vec3 from) {
     Reset();
-    rigidBody->setLinearVelocity(PXConverter::ConvertVector3(linearSpeed));
+    rigidBody->setLinearVelocity({ 0, 0, ballSpeedValue });
     rigidBody->setGlobalPose(physx::PxTransform(PXConverter::ConvertVector3(from)));
+    // todo: rotate on random angle 
 }
 

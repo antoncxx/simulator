@@ -1,10 +1,10 @@
 #include "Converter.hpp"
 
-physx::PxTriangleMesh* PXConverter::ConvertMesh(const Mesh& mesh, physx::PxPhysics* physics, physx::PxCooking* cooking) {
+physx::PxTriangleMesh* PXConverter::ConvertMesh(const std::shared_ptr<Mesh>& mesh, physx::PxPhysics* physics, physx::PxCooking* cooking) {
     using namespace physx;
 
-    auto vertices = mesh.GetVertices();
-    auto indicies = mesh.GetIndices();
+    auto vertices = mesh->GetVertices();
+    auto indicies = mesh->GetIndices();
 
     PxTriangleMeshDesc description;
 

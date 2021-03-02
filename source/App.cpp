@@ -110,11 +110,11 @@ void App::DrawPhysicsDebugWorld(float delta) {
 
 void App::SimulationStep(float dt) {
     auto* scene = Physics::Instance().GetScene();
-    scene->simulate(dt);
+    scene->simulate(static_cast<physx::PxReal>(dt * 3.0f));
     scene->fetchResults(true);
 }
 
 void App::StartNewRound() {
-    auto position = roulleteController->GetStartPoint(1.f);
-    ballController->ShootBall(position, {0, 0, 50});
+    auto position = roulleteController->GetStartPoint(ballController->GetRadius());
+    ballController->ShootBall(position);
 }

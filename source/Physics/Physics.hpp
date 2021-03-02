@@ -6,12 +6,12 @@
 #include "PxConfig.h"
 
 class Physics {
-    physx::PxFoundation*    foundation;
-    physx::PxPvd*           pvd;
-    physx::PxPhysics*       physics;
-    physx::PxCooking*       cooking;
-    physx::PxScene*         scene;
-    physx::PxCpuDispatcher* dispatcher;
+    physx::PxFoundation*    foundation{ nullptr };
+    physx::PxPvd*           pvd{ nullptr };
+    physx::PxPhysics*       physics{ nullptr };
+    physx::PxCooking*       cooking{ nullptr };
+    physx::PxScene*         scene{ nullptr };
+    physx::PxCpuDispatcher* dispatcher{ nullptr };
 
     Physics() = default;
 public:

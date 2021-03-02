@@ -7,6 +7,7 @@ struct BallMaterial {
     float StaticFriction{ 0.1f };
     float DynamicFriction{ 0.1f };
     float Restitution{ 0.1f };
+    float Density{ 3.f };
 };
 
 class BallController : public UIListener {
@@ -14,6 +15,7 @@ class BallController : public UIListener {
     physx::PxRigidDynamic*  rigidBody{};
     physx::PxMaterial*      xMaterial{};
     BallMaterial            ballMaterial{};
+    float                   ballSpeedValue{13.f};
 public:
     BallController();
     virtual ~BallController();
@@ -22,7 +24,8 @@ public:
     void Update(float delta);
     void Draw(const std::shared_ptr<Shader>& shader);
 
-    void ShootBall(glm::vec3 from, glm::vec3 linearSpeed);
+    void ShootBall(glm::vec3 from);
+    [[nodiscrard]] inline float GetRadius() const noexcept { return 1.f; }
     static std::shared_ptr<BallController> Create();
 private:
     void Initialize();

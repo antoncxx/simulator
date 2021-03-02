@@ -4,6 +4,8 @@
 #include <cassert>
 #include <thread>
 
+#define SCALE_FACTOR 0.1f
+
 namespace {
     physx::PxDefaultErrorCallback gDefaultErrorCallback;
     physx::PxDefaultAllocator     gDefaultAllocator;
@@ -21,19 +23,21 @@ void Physics::StartUp() {
         foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocator, gDefaultErrorCallback);
         assert(foundation);
 
+        #ifdef DEBUG
+            pvd = PxCreatePvd(*foundation);
+            assert(pvd);
 
-        pvd = PxCreatePvd(*foundation);
-        assert(pvd);
+            auto* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 3232, 10);
+            assert(transport);
 
-        auto* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 3232, 10);
-        assert(transport);
-
-        pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-        assert(pvd);
+            pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+            assert(pvd);
+        #endif // DEBUG
     }
 
     {
         auto scale = PxTolerancesScale();
+        scale.length = SCALE_FACTOR;
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
         assert(physics);
 
@@ -55,14 +59,13 @@ void Physics::StartUp() {
 
         scene = physics->createScene(desc);
 
-        if (auto* pvd = scene->getScenePvdClient(); pvd) {
-            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS,  true);
-            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS,     true);
-            pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-        }
-
-        scene->setVisualizationParameter(PxVisualizationParameter::eSCALE,      1.0f);
-        scene->setVisualizationParameter(PxVisualizationParameter::eACTOR_AXES, 2.0f);
+        #ifdef DEBUG
+            if (auto* pvd = scene->getScenePvdClient(); pvd) {
+                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS,  true);
+                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS,     true);
+                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+            }
+        #endif // DEBUG
     }
 }
 
