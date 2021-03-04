@@ -4,7 +4,7 @@
 #include <cassert>
 #include <thread>
 
-#define SCALE_FACTOR 0.1f
+#define SCALE_FACTOR 1.f
 
 namespace {
     physx::PxDefaultErrorCallback gDefaultErrorCallback;
@@ -22,23 +22,12 @@ void Physics::StartUp() {
     {
         foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocator, gDefaultErrorCallback);
         assert(foundation);
-
-        #ifdef DEBUG
-            pvd = PxCreatePvd(*foundation);
-            assert(pvd);
-
-            auto* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 3232, 10);
-            assert(transport);
-
-            pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
-            assert(pvd);
-        #endif // DEBUG
     }
 
     {
         auto scale = PxTolerancesScale();
         scale.length = SCALE_FACTOR;
-        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, pvd);
+        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
         assert(physics);
 
         PxCookingParams cookingParams(physics->getTolerancesScale());
@@ -58,14 +47,6 @@ void Physics::StartUp() {
         desc.filterShader = PxDefaultSimulationFilterShader;
 
         scene = physics->createScene(desc);
-
-        #ifdef DEBUG
-            if (auto* pvd = scene->getScenePvdClient(); pvd) {
-                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS,  true);
-                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS,     true);
-                pvd->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-            }
-        #endif // DEBUG
     }
 }
 

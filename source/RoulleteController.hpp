@@ -27,7 +27,7 @@ class RoulleteController : public UIListener {
     RoulleteMaterial roulleteMaterial{};
     physx::PxMaterial* xMaterial{nullptr};
 
-    std::list<physx::PxRigidStatic*> rotators{};
+    std::list<physx::PxRigidDynamic*> rotators{};
 public:
     RoulleteController() noexcept;
     virtual ~RoulleteController() noexcept;

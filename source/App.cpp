@@ -109,9 +109,16 @@ void App::DrawPhysicsDebugWorld(float delta) {
 }
 
 void App::SimulationStep(float dt) {
-    auto* scene = Physics::Instance().GetScene();
-    scene->simulate(static_cast<physx::PxReal>(dt * 3.0f));
-    scene->fetchResults(true);
+    const static float s_StepTime = 1.f / 30.f;
+    static float s_Accumulated = 0.f;
+
+    s_Accumulated += dt;
+    if (s_Accumulated >= s_StepTime) {
+        s_Accumulated -= dt;
+        auto* scene = Physics::Instance().GetScene();
+        scene->simulate(4.f * dt);
+        scene->fetchResults(true);
+    }
 }
 
 void App::StartNewRound() {

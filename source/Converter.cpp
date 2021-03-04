@@ -25,7 +25,7 @@ physx::PxTriangleMesh* PXConverter::ConvertMesh(const std::shared_ptr<Mesh>& mes
     PxTriangleMeshCookingResult::Enum result{};
 
     if (!cooking->cookTriangleMesh(description, writeBuffer, &result)) {
-        throw std::runtime_error("Mesh cookikng isnt failed");
+        throw std::runtime_error("Mesh cooking failed");
     }
 
     PxDefaultMemoryInputData readBuffer(writeBuffer.getData(), writeBuffer.getSize());

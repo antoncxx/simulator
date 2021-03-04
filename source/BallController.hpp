@@ -25,7 +25,7 @@ public:
     void Draw(const std::shared_ptr<Shader>& shader);
 
     void ShootBall(glm::vec3 from);
-    [[nodiscrard]] inline float GetRadius() const noexcept { return 1.f; }
+    [[nodiscard]] inline float GetRadius() const noexcept { return 1.f; }
     static std::shared_ptr<BallController> Create();
 private:
     void Initialize();

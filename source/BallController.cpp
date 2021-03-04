@@ -78,7 +78,7 @@ void BallController::Update(float delta) {
 
 void BallController::Reset() {
     rigidBody->setLinearVelocity({ 0.f, 0.f, 0.f });
-    rigidBody->setAngularVelocity({ 1.f, 1.f, 1.f });
+    rigidBody->setAngularVelocity({ 0.f, 0.f, 0.f });
     rigidBody->setGlobalPose(physx::PxTransform(0.f, 40.f, 0.f));
     rigidBody->clearForce();
     rigidBody->clearTorque();
@@ -88,6 +88,5 @@ void BallController::ShootBall(glm::vec3 from) {
     Reset();
     rigidBody->setLinearVelocity({ 0, 0, ballSpeedValue });
     rigidBody->setGlobalPose(physx::PxTransform(PXConverter::ConvertVector3(from)));
-    // todo: rotate on random angle 
 }
 

@@ -7,7 +7,6 @@
 
 class Physics {
     physx::PxFoundation*    foundation{ nullptr };
-    physx::PxPvd*           pvd{ nullptr };
     physx::PxPhysics*       physics{ nullptr };
     physx::PxCooking*       cooking{ nullptr };
     physx::PxScene*         scene{ nullptr };

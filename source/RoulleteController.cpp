@@ -75,7 +75,7 @@ void RoulleteController::CreatePhysics() {
 
     xMaterial = CreateMaterial();
 
-    ProcessModel(staticRoullete, ModelProcessingFlag::STATIC_MODEL);
+    ProcessModel(staticRoullete,  ModelProcessingFlag::STATIC_MODEL);
     ProcessModel(dynamicRoullete, ModelProcessingFlag::DYNAMIC_MODEL);
 }
 
@@ -89,17 +89,19 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
     for (auto& mesh : model->GetMeshes()) {
         auto* xmesh = PXConverter::ConvertMesh(mesh, physics, cooking);
 
-        PxTriangleMeshGeometry geometry(xmesh);
+        auto* actor = physics->createRigidDynamic(PxTransform(PxVec3(0.f, 0.f, 0.f)));
+        actor->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, true);
 
-        auto* rigidStatic = physics->createRigidStatic(PxTransform(PxVec3(0.f, 0.f, 0.f)));
-        auto* shape = physics->createShape(geometry, *xMaterial);
-        rigidStatic->attachShape(*shape);
+        PxTriangleMeshGeometry geometry;
+        geometry.triangleMesh = xmesh;
+
+        auto* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *xMaterial);
+
+        scene->addActor(*actor);
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
-            rotators.push_back(rigidStatic);
+            rotators.push_back(actor);
         }
-
-        scene->addActor(*rigidStatic);
     }
 
 }
