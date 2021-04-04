@@ -74,6 +74,10 @@ static inline KeyboardButton decodeGLFWKeyboardButton(int32_t code) {
     default:
         return KeyboardButton::Unsupported;
     }
+    
+    // todo:
+    // if (code < GLFW_KEY_Z || code > GLFW_KEY_A) return KeyboardButton::Unsupported;
+    // return static_cast<KeyboardButton>(code - GLFW_KEY_A);
 }
 
 class InputsCallbacksWrapper {

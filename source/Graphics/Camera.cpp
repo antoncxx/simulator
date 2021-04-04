@@ -45,6 +45,8 @@ void Camera::ProcessMouse(float delta) {
         data.yaw   += data.mouseSensitivity * delta * mouseOffset.x;
         data.pitch -= data.mouseSensitivity * delta * mouseOffset.y;
 
+        // todo: clamp pitch from -89 to 89
+
         CalculateViewMatrix();
     } 
 

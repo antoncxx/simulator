@@ -116,7 +116,7 @@ void App::SimulationStep(float dt) {
     if (s_Accumulated >= s_StepTime) {
         s_Accumulated -= dt;
         auto* scene = Physics::Instance().GetScene();
-        scene->simulate(4.f * dt);
+        scene->simulate(1.f * dt);
         scene->fetchResults(true);
     }
 }

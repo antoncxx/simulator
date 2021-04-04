@@ -50,7 +50,10 @@ void RoulleteController::Update(float delta) {
 
     for (auto* mesh : rotators) {
         if (mesh != nullptr) {
-            mesh->setGlobalPose(transform);
+            mesh->setKinematicTarget(transform);
+            
+            // !Incorrect way: 
+            //mesh->setGlobalPose(transform);
         }
     }
 }
@@ -96,7 +99,6 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
         geometry.triangleMesh = xmesh;
 
         auto* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *xMaterial);
-
         scene->addActor(*actor);
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {

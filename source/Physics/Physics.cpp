@@ -4,7 +4,8 @@
 #include <cassert>
 #include <thread>
 
-#define SCALE_FACTOR 1.f
+#define SCALE_FACTOR 0.1f
+#define GRAVITY      9.81f
 
 namespace {
     physx::PxDefaultErrorCallback gDefaultErrorCallback;
@@ -27,6 +28,7 @@ void Physics::StartUp() {
     {
         auto scale = PxTolerancesScale();
         scale.length = SCALE_FACTOR;
+        scale.speed = SCALE_FACTOR * GRAVITY;
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
         assert(physics);
 
@@ -43,7 +45,7 @@ void Physics::StartUp() {
 
         PxSceneDesc desc(scale);
         desc.cpuDispatcher = dispatcher;
-        desc.gravity = { 0.f, -9.81f, 0.f };
+        desc.gravity = { 0.f, -GRAVITY, 0.f };
         desc.filterShader = PxDefaultSimulationFilterShader;
 
         scene = physics->createScene(desc);
