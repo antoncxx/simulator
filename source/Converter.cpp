@@ -35,3 +35,7 @@ physx::PxTriangleMesh* PXConverter::ConvertMesh(const std::shared_ptr<Mesh>& mes
 physx::PxVec3 PXConverter::ConvertVector3(const glm::vec3& vec) {
     return { vec.x, vec.y, vec.z };
 }
+
+glm::vec3 PXConverter::ConvertVector3(const physx::PxVec3& vec) {
+    return { vec.x, vec.y, vec.z };
+}

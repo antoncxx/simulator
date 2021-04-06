@@ -1,10 +1,11 @@
 #include "Graphics/ResourceManager.hpp"
 #include "Graphics/UI.hpp"
 #include "Physics/Physics.hpp"
+#include "Graphics/Camera.hpp"
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 0.0f };
+    float AngulatVelocity{ 0.3f };
     float CurrentAngle{ 0.f };
 };
 
@@ -22,6 +23,7 @@ enum class ModelProcessingFlag {
 class RoulleteController : public UIListener {
     std::shared_ptr<Model>  staticRoullete{};
     std::shared_ptr<Model>  dynamicRoullete{};
+    std::shared_ptr<Shader> roulleteShader{};
 
     RotatorParametrs rotatorParameter{};
     RoulleteMaterial roulleteMaterial{};
@@ -36,7 +38,7 @@ public:
 
     void OnUIUpdate() override;
     void Update(float delta);
-    void Draw(const std::shared_ptr<Shader>& shader);
+    void Draw(const std::shared_ptr<Camera>& viewCamera);
 
     glm::vec3 GetStartPoint(float ballRadius);
 private:

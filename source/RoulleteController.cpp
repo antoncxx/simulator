@@ -61,16 +61,23 @@ void RoulleteController::Update(float delta) {
 void RoulleteController::Initialize() {
     dynamicRoullete = ResourceManager::Instance().CreateModel("DynamicWheel", "Resources/Models/RoulleteDynamic.obj");
     staticRoullete = ResourceManager::Instance().CreateModel("StaticWheel", "Resources/Models/RoulleteStatic.obj");
+    roulleteShader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
 }
 
-void RoulleteController::Draw(const std::shared_ptr<Shader>& shader) {
+void RoulleteController::Draw(const std::shared_ptr<Camera>& viewCamera) {
+    roulleteShader->Use();
+
+    roulleteShader->SetUniform("view",       viewCamera->ViewMatrix());
+    roulleteShader->SetUniform("cameraPos",  viewCamera->GetCameraPosition());
+    roulleteShader->SetUniform("projection", viewCamera->ProjectionMatrix());
+
     glm::mat4 model = glm::mat4(1.f);
-    shader->SetUniform("model", model);
-    staticRoullete->Draw(shader);
+    roulleteShader->SetUniform("model", model);
+    staticRoullete->Draw(roulleteShader);
 
     model = glm::rotate(glm::mat4(1.f), rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0)); // @TODO: read world UP
-    shader->SetUniform("model", model);
-    dynamicRoullete->Draw(shader);
+    roulleteShader->SetUniform("model", model);
+    dynamicRoullete->Draw(roulleteShader);
 }
 
 void RoulleteController::CreatePhysics() {

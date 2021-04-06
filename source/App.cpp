@@ -1,8 +1,9 @@
 #include "App.hpp"
 #include <iostream>
-
+#include <algorithm>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Converter.hpp"
 
 void App::Initialize() {
     BaseGraphicsApplication::Initialize();
@@ -10,8 +11,7 @@ void App::Initialize() {
     UI::Instance().RegisterListener(this);
     Physics::Instance().StartUp();
 
-    shader       = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
-    skyboxShader = ResourceManager::Instance().CreateShader("SkyboxShader", "Resources/Shaders/Skybox.vs", "Resources/Shaders/Skybox.fs");
+    skyboxShader   = ResourceManager::Instance().CreateShader("SkyboxShader", "Resources/Shaders/Skybox.vs", "Resources/Shaders/Skybox.fs");
     
     std::vector<std::filesystem::path> faces
     {
@@ -34,6 +34,13 @@ void App::Initialize() {
     ballController     = BallController::Create();
 
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this));
+    
+    state.SetState(StateContext::SimulatorState::IDLE);
+    auto defaultPosition = roulleteController->GetStartPoint(ballController->GetRadius());
+    ballController->SetResetPosition(PXConverter::ConvertVector3(defaultPosition));
+    ballController->Reset(false);
+    ballController->EnableSimulation(false);
+
 }
 
 void App::Finalize() {
@@ -74,17 +81,11 @@ void App::UpdateComponets(float delta) {
 }
 
 void App::DrawComponents(float delta) {
-    shader->Use();
-    skybox->Bind();
-
-    shader->SetUniform("view",       camera->ViewMatrix());
-    shader->SetUniform("cameraPos",  camera->GetCameraPosition());
-    shader->SetUniform("projection", camera->ProjectionMatrix());
-
-    roulleteController->Draw(shader);
-    ballController->Draw(shader);
+    roulleteController->Draw(camera);
+    ballController->Draw(camera);
 
     skyboxShader->Use();
+    skybox->Bind();
 
     skyboxShader->SetUniform("view", glm::mat4(glm::mat3(camera->ViewMatrix())));
     skyboxShader->SetUniform("projection", camera->ProjectionMatrix());
@@ -109,19 +110,21 @@ void App::DrawPhysicsDebugWorld(float delta) {
 }
 
 void App::SimulationStep(float dt) {
-    const static float s_StepTime = 1.f / 30.f;
+    const static float s_StepTime = 1.f / 60.f;
     static float s_Accumulated = 0.f;
 
     s_Accumulated += dt;
     if (s_Accumulated >= s_StepTime) {
         s_Accumulated -= dt;
         auto* scene = Physics::Instance().GetScene();
-        scene->simulate(1.f * dt);
+        scene->simulate(s_StepTime);
         scene->fetchResults(true);
     }
 }
 
 void App::StartNewRound() {
+    state.SetState(StateContext::SimulatorState::IN_PROGRESS);
+    ballController->EnableSimulation(true);
     auto position = roulleteController->GetStartPoint(ballController->GetRadius());
     ballController->ShootBall(position);
 }

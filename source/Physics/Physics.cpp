@@ -4,7 +4,7 @@
 #include <cassert>
 #include <thread>
 
-#define SCALE_FACTOR 0.1f
+#define SCALE_FACTOR 0.01f
 #define GRAVITY      9.81f
 
 namespace {
@@ -27,13 +27,14 @@ void Physics::StartUp() {
 
     {
         auto scale = PxTolerancesScale();
+
         scale.length = SCALE_FACTOR;
-        scale.speed = SCALE_FACTOR * GRAVITY;
+
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
         assert(physics);
 
         PxCookingParams cookingParams(physics->getTolerancesScale());
-        cookingParams.midphaseDesc.setToDefault(PxMeshMidPhase::eBVH33);
+        cookingParams.midphaseDesc.setToDefault(PxMeshMidPhase::eBVH34);
         cookingParams.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
         cookingParams.meshPreprocessParams |= PxMeshPreprocessingFlag::eFORCE_32BIT_INDICES;
 
@@ -43,7 +44,7 @@ void Physics::StartUp() {
         dispatcher = PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency());
         assert(dispatcher);
 
-        PxSceneDesc desc(scale);
+        PxSceneDesc desc(physics->getTolerancesScale());
         desc.cpuDispatcher = dispatcher;
         desc.gravity = { 0.f, -GRAVITY, 0.f };
         desc.filterShader = PxDefaultSimulationFilterShader;

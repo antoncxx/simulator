@@ -1,6 +1,7 @@
 #include "BallController.hpp"
 #include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 BallController::BallController() {
     UI::Instance().RegisterListener(this);
@@ -12,10 +13,6 @@ BallController::~BallController() {
 
 void BallController::OnUIUpdate() {
     ImGui::Begin("Ball controller");
-    if (ImGui::Button("Reset")) {
-        Reset();
-    }
-
     ImGui::Text("Material:");
 
     bool materialChanged{ false };
@@ -39,10 +36,9 @@ void BallController::CreatePhysics() {
     auto* physics = Physics::Instance().GetPhysics();
 
     xMaterial = CreateMaterial();
-    rigidBody = PxCreateDynamic(*physics, PxTransform(33, 16, 20), PxSphereGeometry(GetRadius()), *xMaterial, ballMaterial.Density);
+    rigidBody = PxCreateDynamic(*physics, PxTransform(), PxSphereGeometry(GetRadius()), *xMaterial, ballMaterial.Density);
     
     scene->addActor(*rigidBody);
-    Reset();
 }
 
 std::shared_ptr<BallController> BallController::Create() {
@@ -52,19 +48,24 @@ std::shared_ptr<BallController> BallController::Create() {
     return instance;
 }
 
-void BallController::Draw(const std::shared_ptr<Shader>& shader) {
-    shader->Use();
+void BallController::Draw(const std::shared_ptr<Camera>& viewCamera) {
+    ballShader->Use();
+    ballShader->SetUniform("view",       viewCamera->ViewMatrix());
+    ballShader->SetUniform("projection", viewCamera->ProjectionMatrix());
 
-    auto pos = rigidBody->getGlobalPose();
-    glm::vec3 position = { pos.p.x, pos.p.y, pos.p.z };
-    shader->SetUniform("model", glm::translate(glm::mat4(1.f), position));
+    auto transform = rigidBody->getGlobalPose();
 
-    model->Draw(shader);
+    auto modelTransform = glm::mat4(1.f);
+    modelTransform = glm::translate(modelTransform, PXConverter::ConvertVector3(transform.p));
+    modelTransform = glm::rotate(modelTransform, transform.q.getAngle(), PXConverter::ConvertVector3(transform.q.getImaginaryPart()));
+
+    ballShader->SetUniform("model", modelTransform);
+    model->Draw(ballShader);
 }
 
 void BallController::Initialize() {
-    model = ResourceManager::Instance().CreateModel("Ball", "Resources/Models/Sphere.obj");
-
+    model      = ResourceManager::Instance().CreateModel("Ball", "Resources/Models/Sphere.obj");
+    ballShader = ResourceManager::Instance().CreateShader("BallShader", "Resources/Shaders/Ball.vs", "Resources/Shaders/Ball.fs");
 }
 
 physx::PxMaterial* BallController::CreateMaterial() {
@@ -73,20 +74,25 @@ physx::PxMaterial* BallController::CreateMaterial() {
 }
 
 void BallController::Update(float delta) {
-
 }
 
-void BallController::Reset() {
+void BallController::Reset(bool awake) {
     rigidBody->setLinearVelocity({ 0.f, 0.f, 0.f });
     rigidBody->setAngularVelocity({ 0.f, 0.f, 0.f });
-    rigidBody->setGlobalPose(physx::PxTransform(0.f, 40.f, 0.f));
     rigidBody->clearForce();
     rigidBody->clearTorque();
+    rigidBody->setGlobalPose(physx::PxTransform(resetPosition), awake);
 }
 
 void BallController::ShootBall(glm::vec3 from) {
-    Reset();
-    rigidBody->setLinearVelocity({ 0, 0, ballSpeedValue });
+    Reset(true);
+    rigidBody->setLinearVelocity({ 0, 0, ballSpeedValue }); // todo: randomize
     rigidBody->setGlobalPose(physx::PxTransform(PXConverter::ConvertVector3(from)));
 }
+
+void BallController::EnableSimulation(bool enable) {
+    rigidBody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !enable);
+
+}
+
 

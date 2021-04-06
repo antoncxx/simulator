@@ -12,12 +12,13 @@
 
 class App final : public BaseGraphicsApplication, public UIListener {
 private:
-    std::shared_ptr<Shader> shader{};
-    std::shared_ptr<Shader> skyboxShader{};
-    std::shared_ptr<Camera> camera;
+    std::shared_ptr<Camera>             camera;
     std::shared_ptr<RoulleteController> roulleteController{};
     std::shared_ptr<BallController>     ballController{};
-    std::shared_ptr<Skybox>     skybox{ };
+    std::shared_ptr<Skybox>             skybox{ };
+    std::shared_ptr<Shader>             skyboxShader{};
+
+    StateContext state{};
 
 public:
     explicit App() = default;
