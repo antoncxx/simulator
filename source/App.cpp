@@ -4,6 +4,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Converter.hpp"
+#include <thread>
+#include <fstream>
+#include <future>
 
 void App::Initialize() {
     BaseGraphicsApplication::Initialize();
@@ -11,7 +14,7 @@ void App::Initialize() {
     UI::Instance().RegisterListener(this);
     Physics::Instance().StartUp();
 
-    skyboxShader   = ResourceManager::Instance().CreateShader("SkyboxShader", "Resources/Shaders/Skybox.vs", "Resources/Shaders/Skybox.fs");
+    skyboxShader = ResourceManager::Instance().CreateShader("SkyboxShader", "Resources/Shaders/Skybox.vs", "Resources/Shaders/Skybox.fs");
     
     std::vector<std::filesystem::path> faces
     {
@@ -34,6 +37,11 @@ void App::Initialize() {
     ballController     = BallController::Create();
 
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this));
+    InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
+        if (!state.IsMathTest()) {
+            MathTest(100);
+        }
+    });
     
     state.SetState(StateContext::SimulatorState::IDLE);
     auto defaultPosition = roulleteController->GetStartPoint(ballController->GetRadius());
@@ -52,9 +60,11 @@ void App::Finalize() {
 
 void App::OnEveryFrame(float delta) {
     UpdateViewPort();
-    UpdateComponets(delta);
-    DrawComponents(delta);
-    DrawPhysicsDebugWorld(delta);
+
+    if (!state.IsMathTest()) {
+        UpdateComponets(delta);
+        DrawComponents(delta);
+    }
 }
 
 void App::UpdateViewPort() {
@@ -73,11 +83,18 @@ void App::UpdateViewPort() {
 }
 
 void App::UpdateComponets(float delta) {
-    camera->Update(delta);
-    ballController->Update(delta);
-    roulleteController->Update(delta);
+    const static float s_StepTime = 1.f / 59.f;
+    static float s_Accumulated = 0.f;
 
-    SimulationStep(delta);
+    s_Accumulated += delta;
+
+    if (s_Accumulated >= s_StepTime) {
+        s_Accumulated -= delta;
+        camera->Update(s_StepTime);
+        ballController->Update(s_StepTime);
+        roulleteController->Update(s_StepTime);
+        SimulationStep(s_StepTime);
+    }
 }
 
 void App::DrawComponents(float delta) {
@@ -105,21 +122,10 @@ void App::OnUIUpdate() {
     glfwSetWindowTitle(renderWindow, title.c_str());
 }
 
-void App::DrawPhysicsDebugWorld(float delta) {
-    
-}
-
 void App::SimulationStep(float dt) {
-    const static float s_StepTime = 1.f / 60.f;
-    static float s_Accumulated = 0.f;
-
-    s_Accumulated += dt;
-    if (s_Accumulated >= s_StepTime) {
-        s_Accumulated -= dt;
-        auto* scene = Physics::Instance().GetScene();
-        scene->simulate(s_StepTime);
-        scene->fetchResults(true);
-    }
+    auto* scene = Physics::Instance().GetScene();
+    scene->simulate(dt);
+    scene->fetchResults(true);
 }
 
 void App::StartNewRound() {
@@ -127,4 +133,68 @@ void App::StartNewRound() {
     ballController->EnableSimulation(true);
     auto position = roulleteController->GetStartPoint(ballController->GetRadius());
     ballController->ShootBall(position);
+}
+
+void App::MathTest(uint32_t gamesNumber) {
+    state.SetState(StateContext::SimulatorState::MATH_TEST);
+    std::cout << "MATH TEST: Start.\n\n";
+
+    std::array<int32_t, 38> result;
+    std::fill(result.begin(), result.end(), 0);
+
+    const float dt = 1.f / 60.f;
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glfwSwapBuffers(renderWindow);
+
+    for (uint32_t i = 0u; i < gamesNumber; ++i) {
+        std::cout << "MATH TEST: New round.\n";
+        StartNewRound();
+
+        int32_t roundResult = {-1};
+        float accumulatedTime = 0.f;
+        float totalTime = 0.f;
+
+        while (true) {
+            UpdateComponets(dt);
+            int32_t currentPocket = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
+            totalTime += dt;
+ 
+            if (currentPocket == roundResult) {
+                accumulatedTime += dt;
+
+                if (roundResult != -1 && accumulatedTime > 10.f) {
+                    result[roundResult]++;
+                    std::cout << "MATH TEST: Round finished with in pocket: " << roundResult << "\n\n";
+                    break;
+                }
+
+                continue;
+            } 
+
+            roundResult = currentPocket;
+            accumulatedTime = 0.f;
+
+            if (totalTime > 300.f) {
+                std::cout << "MATH TEST: Max time per round exceeded " << "\n\n";
+                break;
+            }
+
+
+
+            glfwPollEvents();
+        }
+    }
+
+    std::cout << "MATH TEST: Finish.\n\n";
+    state.SetState(StateContext::SimulatorState::IDLE);
+
+    std::ofstream file("MathTest.log");
+
+    for (const auto r : result) {
+        file << r << " ";
+    }
+
+    file.close();
+
 }

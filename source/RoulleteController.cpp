@@ -1,6 +1,8 @@
 #include "RoulleteController.hpp"
 #include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
+#include "State.hpp"
 
 RoulleteController::RoulleteController() noexcept {
     UI::Instance().RegisterListener(this);
@@ -18,6 +20,7 @@ std::shared_ptr<RoulleteController> RoulleteController::Create() {
 }
 
 void RoulleteController::OnUIUpdate() {
+
     ImGui::Begin("Roullete Controller");
     ImGui::Text("3D Models:");
     dynamicRoullete->OnUIUpdate();
@@ -62,6 +65,8 @@ void RoulleteController::Initialize() {
     dynamicRoullete = ResourceManager::Instance().CreateModel("DynamicWheel", "Resources/Models/RoulleteDynamic.obj");
     staticRoullete = ResourceManager::Instance().CreateModel("StaticWheel", "Resources/Models/RoulleteStatic.obj");
     roulleteShader = ResourceManager::Instance().CreateShader("DefaultShader", "Resources/Shaders/Default.vs", "Resources/Shaders/Default.fs");
+
+    pockets = dynamicRoullete->GetMeshByName("WheelDividers").value();
 }
 
 void RoulleteController::Draw(const std::shared_ptr<Camera>& viewCamera) {
@@ -110,7 +115,7 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
             rotators.push_back(actor);
-        }
+        } 
     }
 
 }
@@ -150,4 +155,30 @@ glm::vec3 RoulleteController::GetStartPoint(float ballRadius) {
     auto zstart = outerCenter.z;
 
     return { xstart, ystart, zstart };
+}
+
+
+int32_t RoulleteController::GetPocket(physx::PxTransform position, float radius) const {
+    constexpr static size_t pocketsNumber = 38;
+    constexpr static float dAngle = glm::two_pi<float>() / pocketsNumber;
+
+    if (auto ptr = pockets.lock()) {
+        const auto& box = ptr->GetBoundingBox();
+        const auto& ballPos = PXConverter::ConvertVector3(position.p);
+        const auto& boxPos = box.GetCenterPoint();
+
+        if (glm::length(ballPos - boxPos) <= (box.GetSize().x / 2 - radius)) {
+            glm::vec2 v1 = { 1.f, 0 };
+            glm::vec2 v2{ ballPos.x, ballPos.z };
+
+            float angle = glm::orientedAngle(glm::normalize(v1), glm::normalize(v2));
+            angle += rotatorParameter.CurrentAngle;
+            angle = glm::mod(angle, glm::two_pi<float>());
+
+            int32_t offsetIndex = static_cast<int>(angle / dAngle + 0.5);
+            return (pocketsNumber + offsetIndex) % pocketsNumber;
+        }
+    }
+
+    return -1;
 }

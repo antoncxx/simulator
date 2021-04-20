@@ -34,7 +34,8 @@ private:
     void UpdateViewPort();
     void UpdateComponets(float delta);
     void DrawComponents(float delta);
-    void DrawPhysicsDebugWorld(float delta);
     void SimulationStep(float dt);
     void StartNewRound();
+
+    void MathTest(uint32_t gamesNumber);
 };

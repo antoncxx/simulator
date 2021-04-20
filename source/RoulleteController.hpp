@@ -5,7 +5,7 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 0.3f };
+    float AngulatVelocity{ 0.0f };
     float CurrentAngle{ 0.f };
 };
 
@@ -24,6 +24,7 @@ class RoulleteController : public UIListener {
     std::shared_ptr<Model>  staticRoullete{};
     std::shared_ptr<Model>  dynamicRoullete{};
     std::shared_ptr<Shader> roulleteShader{};
+    std::weak_ptr<Mesh>     pockets{};
 
     RotatorParametrs rotatorParameter{};
     RoulleteMaterial roulleteMaterial{};
@@ -41,6 +42,7 @@ public:
     void Draw(const std::shared_ptr<Camera>& viewCamera);
 
     glm::vec3 GetStartPoint(float ballRadius);
+    int32_t GetPocket(physx::PxTransform position, float radius) const;
 private:
     void Initialize();
     void CreatePhysics();

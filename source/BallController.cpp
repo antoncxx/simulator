@@ -1,7 +1,7 @@
 #include "BallController.hpp"
 #include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
+#include "State.hpp"
 
 BallController::BallController() {
     UI::Instance().RegisterListener(this);
@@ -12,6 +12,7 @@ BallController::~BallController() {
 }
 
 void BallController::OnUIUpdate() {
+
     ImGui::Begin("Ball controller");
     ImGui::Text("Material:");
 
@@ -36,7 +37,13 @@ void BallController::CreatePhysics() {
     auto* physics = Physics::Instance().GetPhysics();
 
     xMaterial = CreateMaterial();
-    rigidBody = PxCreateDynamic(*physics, PxTransform(), PxSphereGeometry(GetRadius()), *xMaterial, ballMaterial.Density);
+    rigidBody = PxCreateDynamic(
+        *physics, 
+        PxTransform(physx::PxIDENTITY::PxIdentity), 
+        PxSphereGeometry(GetRadius()), 
+        *xMaterial, 
+        ballMaterial.Density
+    );
     
     scene->addActor(*rigidBody);
 }
@@ -57,7 +64,11 @@ void BallController::Draw(const std::shared_ptr<Camera>& viewCamera) {
 
     auto modelTransform = glm::mat4(1.f);
     modelTransform = glm::translate(modelTransform, PXConverter::ConvertVector3(transform.p));
-    modelTransform = glm::rotate(modelTransform, transform.q.getAngle(), PXConverter::ConvertVector3(transform.q.getImaginaryPart()));
+    modelTransform = glm::rotate(
+        modelTransform, 
+        transform.q.getAngle(), 
+        PXConverter::ConvertVector3(transform.q.getImaginaryPart())
+    );
 
     ballShader->SetUniform("model", modelTransform);
     model->Draw(ballShader);
@@ -65,15 +76,24 @@ void BallController::Draw(const std::shared_ptr<Camera>& viewCamera) {
 
 void BallController::Initialize() {
     model      = ResourceManager::Instance().CreateModel("Ball", "Resources/Models/Sphere.obj");
-    ballShader = ResourceManager::Instance().CreateShader("BallShader", "Resources/Shaders/Ball.vs", "Resources/Shaders/Ball.fs");
+    ballShader = ResourceManager::Instance().CreateShader(
+        "BallShader", 
+        "Resources/Shaders/Ball.vs", 
+        "Resources/Shaders/Ball.fs"
+    );
 }
 
 physx::PxMaterial* BallController::CreateMaterial() {
     auto* physics = Physics::Instance().GetPhysics();
-    return physics->createMaterial(ballMaterial.StaticFriction, ballMaterial.DynamicFriction, ballMaterial.Restitution);
+    return physics->createMaterial(
+        ballMaterial.StaticFriction, 
+        ballMaterial.DynamicFriction, 
+        ballMaterial.Restitution
+    );
 }
 
 void BallController::Update(float delta) {
+
 }
 
 void BallController::Reset(bool awake) {

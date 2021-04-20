@@ -32,7 +32,9 @@ public:
     void Reset(bool awake);
 
     inline void SetResetPosition(const physx::PxVec3& pos) noexcept { resetPosition = pos; }
+
     [[nodiscard]] inline float GetRadius() const noexcept { return 1.f; }
+    [[nodiscard]] inline physx::PxTransform GetBallTransform() const { return rigidBody->getGlobalPose(); }
 
     static std::shared_ptr<BallController> Create();
 private:
