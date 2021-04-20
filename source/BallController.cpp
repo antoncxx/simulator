@@ -12,6 +12,7 @@ BallController::~BallController() {
 }
 
 void BallController::OnUIUpdate() {
+#ifdef DEBUG
 
     ImGui::Begin("Ball controller");
     ImGui::Text("Material:");
@@ -29,6 +30,7 @@ void BallController::OnUIUpdate() {
 
     ImGui::SliderFloat("Ball speed value: ", &ballSpeedValue, -50.f, 50.f);
     ImGui::End();
+#endif // DEBUG
 }
 
 void BallController::CreatePhysics() {

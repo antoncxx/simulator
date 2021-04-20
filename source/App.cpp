@@ -4,9 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Converter.hpp"
-#include <thread>
 #include <fstream>
-#include <future>
+
 
 void App::Initialize() {
     BaseGraphicsApplication::Initialize();
@@ -39,7 +38,7 @@ void App::Initialize() {
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this));
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
         if (!state.IsMathTest()) {
-            MathTest(100);
+            MathTest(10'000'000);
         }
     });
     
@@ -83,7 +82,7 @@ void App::UpdateViewPort() {
 }
 
 void App::UpdateComponets(float delta) {
-    const static float s_StepTime = 1.f / 59.f;
+    const static float s_StepTime = 1.f / 30.f;
     static float s_Accumulated = 0.f;
 
     s_Accumulated += delta;
@@ -135,6 +134,7 @@ void App::StartNewRound() {
     ballController->ShootBall(position);
 }
 
+// TODO: refactor function and add additional end round criterias
 void App::MathTest(uint32_t gamesNumber) {
     state.SetState(StateContext::SimulatorState::MATH_TEST);
     std::cout << "MATH TEST: Start.\n\n";
@@ -142,13 +142,14 @@ void App::MathTest(uint32_t gamesNumber) {
     std::array<int32_t, 38> result;
     std::fill(result.begin(), result.end(), 0);
 
-    const float dt = 1.f / 60.f;
+    const float dt = 1.f / 30.f;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwSwapBuffers(renderWindow);
 
+    int32_t failed{0};
     for (uint32_t i = 0u; i < gamesNumber; ++i) {
-        std::cout << "MATH TEST: New round.\n";
+        std::cout << "MATH TEST: New round ID=" << i << "\n";
         StartNewRound();
 
         int32_t roundResult = {-1};
@@ -165,7 +166,7 @@ void App::MathTest(uint32_t gamesNumber) {
 
                 if (roundResult != -1 && accumulatedTime > 10.f) {
                     result[roundResult]++;
-                    std::cout << "MATH TEST: Round finished with in pocket: " << roundResult << "\n\n";
+                    std::cout << "MATH TEST: Round finished in pocket: " << roundResult << ". Total time " << totalTime << "\n\n";
                     break;
                 }
 
@@ -176,17 +177,18 @@ void App::MathTest(uint32_t gamesNumber) {
             accumulatedTime = 0.f;
 
             if (totalTime > 300.f) {
-                std::cout << "MATH TEST: Max time per round exceeded " << "\n\n";
+                std::cerr << "MATH TEST: Max time per round exceeded\n";    
+                const auto& tr = ballController->GetBallTransform();
+                std::cerr << "MATH TEST: Ball position x=" << tr.p.x << ", y=" << tr.p.y << ", z=" << tr.p.z << "\n";
+                failed++;
                 break;
             }
-
-
 
             glfwPollEvents();
         }
     }
 
-    std::cout << "MATH TEST: Finish.\n\n";
+    std::cout << "MATH TEST: Finish. Failed " << failed <<"\n\n";
     state.SetState(StateContext::SimulatorState::IDLE);
 
     std::ofstream file("MathTest.log");

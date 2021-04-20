@@ -6,10 +6,10 @@
 
 
 struct BallMaterial {
-    float StaticFriction{ 0.4f };
-    float DynamicFriction{ 0.6f };
+    float StaticFriction{ 0.5f };
+    float DynamicFriction{ 0.5f };
     float Restitution{ 0.2f };
-    float Density{ 3.f };
+    float Density{ 1.f };
 };
 
 class BallController : public UIListener {
@@ -18,7 +18,7 @@ class BallController : public UIListener {
     physx::PxRigidDynamic*  rigidBody{};
     physx::PxMaterial*      xMaterial{};
     BallMaterial            ballMaterial{};
-    float                   ballSpeedValue{13.f};
+    float                   ballSpeedValue{50.f};
     physx::PxVec3           resetPosition{0.f, 0.f, 0.f};
 public:
     BallController();

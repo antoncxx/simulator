@@ -28,7 +28,7 @@ void Physics::StartUp() {
     {
         auto scale = PxTolerancesScale();
 
-        scale.length = SCALE_FACTOR;
+        scale.length = SCALE_FACTOR; //TODO: WTF????
 
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
         assert(physics);

@@ -5,14 +5,14 @@
 
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 0.0f };
+    float AngulatVelocity{ 0.3f };
     float CurrentAngle{ 0.f };
 };
 
 struct RoulleteMaterial {
-    float StaticFriction{ 0.1f };
-    float DynamicFriction{ 0.1f };
-    float Restitution{ 0.1f };
+    float StaticFriction{ 0.5f };
+    float DynamicFriction{ 0.5f };
+    float Restitution{ 0.2f };
 };
 
 enum class ModelProcessingFlag {

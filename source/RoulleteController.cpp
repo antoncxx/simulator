@@ -20,7 +20,7 @@ std::shared_ptr<RoulleteController> RoulleteController::Create() {
 }
 
 void RoulleteController::OnUIUpdate() {
-
+#ifdef DEBUG
     ImGui::Begin("Roullete Controller");
     ImGui::Text("3D Models:");
     dynamicRoullete->OnUIUpdate();
@@ -41,6 +41,7 @@ void RoulleteController::OnUIUpdate() {
     }
 
     ImGui::End();
+#endif // RELEASE
 }
 
 void RoulleteController::Update(float delta) {
