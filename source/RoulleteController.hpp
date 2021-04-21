@@ -44,7 +44,7 @@ public:
 
     glm::vec3 GetStartPoint(float ballRadius);
     [[nodiscard]] int32_t GetPocket(physx::PxTransform position, float radius) const;
-    [[nodiscard]] constexpr float GetTilt() const noexcept { return glm::radians(3.f); }
+    [[nodiscard]] constexpr float GetTilt() const noexcept { return glm::radians(0.f); }
 private:
     void Initialize();
     void CreatePhysics();

@@ -38,7 +38,7 @@ void App::Initialize() {
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this, false));
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
         if (!state.IsMathTest()) {
-            MathTest(1'000'000);
+            MathTest(100'000);
         }
     });
     
@@ -64,6 +64,8 @@ void App::OnEveryFrame(float delta) {
         UpdateComponets(delta);
         DrawComponents(delta);
     }
+
+
 }
 
 void App::UpdateViewPort() {
@@ -82,13 +84,13 @@ void App::UpdateViewPort() {
 }
 
 void App::UpdateComponets(float delta) {
-    const static float s_StepTime = 1.f / 30.f;
+    const static float s_StepTime = 1.f / 60.f;
     static float s_Accumulated = 0.f;
 
     s_Accumulated += delta;
 
     if (s_Accumulated >= s_StepTime) {
-        s_Accumulated -= delta;
+        s_Accumulated -= s_StepTime;
         camera->Update(s_StepTime);
         ballController->Update(s_StepTime);
         roulleteController->Update(s_StepTime);
@@ -119,6 +121,11 @@ void App::OnUIUpdate() {
     float framerate = ImGui::GetIO().Framerate;
     std::string title = "Roullete Simulator. Framerate: " + std::to_string(framerate);
     glfwSetWindowTitle(renderWindow, title.c_str());
+
+    const auto p = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
+
+    ImGui::Begin(std::to_string(p).c_str());
+    ImGui::End();
 }
 
 void App::SimulationStep(float dt) {
@@ -139,16 +146,15 @@ void App::StartNewRound(bool mathTest) {
 
 // TODO: refactor function and add additional end round criterias
 void App::MathTest(uint32_t gamesNumber) {
+    glfwHideWindow(renderWindow);
+
     state.SetState(StateContext::SimulatorState::MATH_TEST);
     std::cout << "MATH TEST: Start.\n\n";
 
     std::array<int32_t, 38> result;
     std::fill(result.begin(), result.end(), 0);
 
-    const float dt = 1.f / 30.f;
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glfwSwapBuffers(renderWindow);
+    const float dt = 1.f / 60.f;
 
     int32_t failed{0};
     for (uint32_t i = 0u; i < gamesNumber; ++i) {
@@ -157,19 +163,20 @@ void App::MathTest(uint32_t gamesNumber) {
 
         int32_t roundResult = {-1};
         float accumulatedTime = 0.f;
-        float totalTime = 0.f;
+        float total = 0.f;
 
         while (true) {
+            total += dt;
+
             UpdateComponets(dt);
             int32_t currentPocket = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
-            totalTime += dt;
  
             if (currentPocket == roundResult && currentPocket != -1) {
                 accumulatedTime += dt;
 
                 if (roundResult != -1 && accumulatedTime > 10.f) {
                     result[roundResult]++;
-                    std::cout << "MATH TEST: Round finished in pocket: " << roundResult << ". Total time " << totalTime << "\n\n";
+                    std::cout << "MATH TEST: Round finished in pocket: " << roundResult << ".{Failed: " << failed << "}\n\n";
                     break;
                 }
 
@@ -179,17 +186,25 @@ void App::MathTest(uint32_t gamesNumber) {
             roundResult = currentPocket;
             accumulatedTime = 0.f;
 
-            if (totalTime > 300.f) {
-                std::cerr << "MATH TEST: Max time per round exceeded\n";    
-                const auto& tr = ballController->GetBallTransform();
-                std::cerr << "MATH TEST: Ball position x=" << tr.p.x << ", y=" << tr.p.y << ", z=" << tr.p.z << "\n\n";
-                failed++;
+
+            if (ballController->GetBallTransform().p.y < 0) {
+                std::cerr << "MATH TEST: Round failed as ball escaped the wheel\n\n";
+                break;
+            }
+
+            if (ballController->IsSleeping()) {
+                std::cerr << "MATH TEST: Round failed as ball fall asleep\n\n";
+                break;
+            }
+
+            if (total >= 300.f) {
+                ++failed;
+                std::cerr << "MATH TEST: Timeout exceeded\n\n";
                 break;
             }
         }
 
         glfwPollEvents();
-
     }
 
     std::cout << "MATH TEST: Finish. Failed " << failed <<"\n\n";
@@ -202,5 +217,5 @@ void App::MathTest(uint32_t gamesNumber) {
     }
 
     file.close();
-
+    glfwShowWindow(renderWindow);
 }

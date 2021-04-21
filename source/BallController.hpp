@@ -35,6 +35,8 @@ public:
 
     [[nodiscard]] inline constexpr float GetRadius() const noexcept { return 1.f; }
     [[nodiscard]] inline physx::PxTransform GetBallTransform() const { return rigidBody->getGlobalPose(); }
+    [[nodiscard]] inline auto IsSleeping() const { return rigidBody->isSleeping(); }
+    [[nodiscard]] inline auto rb() const { return rigidBody; }
 
     static std::shared_ptr<BallController> Create();
 private:

@@ -181,7 +181,7 @@ int32_t RoulleteController::GetPocket(physx::PxTransform position, float radius)
             angle += rotatorParameter.CurrentAngle;
             angle = glm::mod(angle, glm::two_pi<float>());
 
-            int32_t offsetIndex = static_cast<int>(angle / dAngle + 0.5);
+            int32_t offsetIndex = static_cast<size_t>(std::round(angle / dAngle + 0.5));
             return (pocketsNumber + offsetIndex) % pocketsNumber;
         }
     }
