@@ -3,6 +3,7 @@
 #include "Physics/Physics.hpp"
 #include "Graphics/Camera.hpp"
 
+#define TILT_AXIS {1.f, 0.f, 0.f}
 
 struct RotatorParametrs {
     float AngulatVelocity{ 0.3f };
@@ -42,7 +43,8 @@ public:
     void Draw(const std::shared_ptr<Camera>& viewCamera);
 
     glm::vec3 GetStartPoint(float ballRadius);
-    int32_t GetPocket(physx::PxTransform position, float radius) const;
+    [[nodiscard]] int32_t GetPocket(physx::PxTransform position, float radius) const;
+    [[nodiscard]] constexpr float GetTilt() const noexcept { return glm::radians(3.f); }
 private:
     void Initialize();
     void CreatePhysics();

@@ -48,14 +48,14 @@ void RoulleteController::Update(float delta) {
     using namespace physx;
 
     rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta;
-
-    PxQuat quaternion(rotatorParameter.CurrentAngle, { 0.f, 1.f, 0.f });
-    auto transform = PxTransform(0.f, 0.f, 0.f, quaternion);
-
+    
+    glm::mat4 model = glm::rotate(glm::mat4(1.f), GetTilt(), TILT_AXIS);
+    model = glm::rotate(model, rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0));
+    glm::quat q = model;
+    PxTransform transform(PxQuat(q.x, q.y, q.z, q.w));
     for (auto* mesh : rotators) {
         if (mesh != nullptr) {
-            mesh->setKinematicTarget(transform);
-            
+            mesh->setKinematicTarget(transform);      
             // !Incorrect way: 
             //mesh->setGlobalPose(transform);
         }
@@ -76,12 +76,14 @@ void RoulleteController::Draw(const std::shared_ptr<Camera>& viewCamera) {
     roulleteShader->SetUniform("view",       viewCamera->ViewMatrix());
     roulleteShader->SetUniform("cameraPos",  viewCamera->GetCameraPosition());
     roulleteShader->SetUniform("projection", viewCamera->ProjectionMatrix());
-
-    glm::mat4 model = glm::mat4(1.f);
+    
+    glm::mat4 model = glm::rotate(glm::mat4(1.f), GetTilt(), TILT_AXIS);
     roulleteShader->SetUniform("model", model);
     staticRoullete->Draw(roulleteShader);
 
-    model = glm::rotate(glm::mat4(1.f), rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0)); // @TODO: read world UP
+    model = glm::rotate(model, rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0)); // @TODO: read world UP
+    
+    
     roulleteShader->SetUniform("model", model);
     dynamicRoullete->Draw(roulleteShader);
 }
@@ -113,6 +115,9 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
 
         auto* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *xMaterial);
         scene->addActor(*actor);
+
+        PxQuat quaternion = PxQuat(GetTilt(), TILT_AXIS);
+        actor->setGlobalPose(PxTransform(quaternion));
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
             rotators.push_back(actor);
@@ -155,7 +160,7 @@ glm::vec3 RoulleteController::GetStartPoint(float ballRadius) {
     auto ystart = yo + ballRadius * (1 - std::tan(angle));
     auto zstart = outerCenter.z;
 
-    return { xstart, ystart, zstart };
+    return glm::rotate(glm::vec3{ xstart, ystart, zstart }, GetTilt(), TILT_AXIS);
 }
 
 

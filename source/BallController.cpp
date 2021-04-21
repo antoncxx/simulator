@@ -1,6 +1,8 @@
 #include "BallController.hpp"
 #include "Converter.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/vector_angle.hpp>
+
 #include "State.hpp"
 
 BallController::BallController() {
@@ -106,9 +108,12 @@ void BallController::Reset(bool awake) {
     rigidBody->setGlobalPose(physx::PxTransform(resetPosition), awake);
 }
 
-void BallController::ShootBall(glm::vec3 from) {
+void BallController::ShootBall(const glm::vec3& from, const glm::vec3& tilt, const float tiltAngle) {
     Reset(true);
-    rigidBody->setLinearVelocity({ 0, 0, ballSpeedValue }); // todo: randomize
+
+    glm::vec3 velocity = glm::rotate({ 0, 0, ballSpeedValue }, tiltAngle, tilt);
+
+    rigidBody->setLinearVelocity(PXConverter::ConvertVector3(velocity)); // todo: randomize
     rigidBody->setGlobalPose(physx::PxTransform(PXConverter::ConvertVector3(from)));
 }
 

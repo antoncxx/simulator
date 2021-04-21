@@ -35,7 +35,7 @@ private:
     void UpdateComponets(float delta);
     void DrawComponents(float delta);
     void SimulationStep(float dt);
-    void StartNewRound();
+    void StartNewRound(bool mathTest);
 
     void MathTest(uint32_t gamesNumber);
 };

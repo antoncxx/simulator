@@ -30,15 +30,15 @@ void App::Initialize() {
 
     camera->SetAspectRatio(1.75f);
     camera->SetFov(45.f);
-    camera->SetPlanes(0.1f, 300.f);
+    camera->SetPlanes(0.1f, 1000.f);
 
     roulleteController = RoulleteController::Create();
     ballController     = BallController::Create();
 
-    InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this));
+    InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this, false));
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
         if (!state.IsMathTest()) {
-            MathTest(10'000'000);
+            MathTest(1'000'000);
         }
     });
     
@@ -127,11 +127,14 @@ void App::SimulationStep(float dt) {
     scene->fetchResults(true);
 }
 
-void App::StartNewRound() {
-    state.SetState(StateContext::SimulatorState::IN_PROGRESS);
+void App::StartNewRound(bool mathTest) {
+    if (!mathTest) {
+        state.SetState(StateContext::SimulatorState::IN_PROGRESS);
+    }
+
     ballController->EnableSimulation(true);
     auto position = roulleteController->GetStartPoint(ballController->GetRadius());
-    ballController->ShootBall(position);
+    ballController->ShootBall(position, TILT_AXIS, roulleteController->GetTilt());
 }
 
 // TODO: refactor function and add additional end round criterias
@@ -150,7 +153,7 @@ void App::MathTest(uint32_t gamesNumber) {
     int32_t failed{0};
     for (uint32_t i = 0u; i < gamesNumber; ++i) {
         std::cout << "MATH TEST: New round ID=" << i << "\n";
-        StartNewRound();
+        StartNewRound(true);
 
         int32_t roundResult = {-1};
         float accumulatedTime = 0.f;
@@ -161,7 +164,7 @@ void App::MathTest(uint32_t gamesNumber) {
             int32_t currentPocket = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
             totalTime += dt;
  
-            if (currentPocket == roundResult) {
+            if (currentPocket == roundResult && currentPocket != -1) {
                 accumulatedTime += dt;
 
                 if (roundResult != -1 && accumulatedTime > 10.f) {
@@ -179,13 +182,14 @@ void App::MathTest(uint32_t gamesNumber) {
             if (totalTime > 300.f) {
                 std::cerr << "MATH TEST: Max time per round exceeded\n";    
                 const auto& tr = ballController->GetBallTransform();
-                std::cerr << "MATH TEST: Ball position x=" << tr.p.x << ", y=" << tr.p.y << ", z=" << tr.p.z << "\n";
+                std::cerr << "MATH TEST: Ball position x=" << tr.p.x << ", y=" << tr.p.y << ", z=" << tr.p.z << "\n\n";
                 failed++;
                 break;
             }
-
-            glfwPollEvents();
         }
+
+        glfwPollEvents();
+
     }
 
     std::cout << "MATH TEST: Finish. Failed " << failed <<"\n\n";
