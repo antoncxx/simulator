@@ -38,7 +38,7 @@ void App::Initialize() {
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this, false));
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
         if (!state.IsMathTest()) {
-            MathTest(100'000);
+            MathTest(10);
         }
     });
     
@@ -121,11 +121,6 @@ void App::OnUIUpdate() {
     float framerate = ImGui::GetIO().Framerate;
     std::string title = "Roullete Simulator. Framerate: " + std::to_string(framerate);
     glfwSetWindowTitle(renderWindow, title.c_str());
-
-    const auto p = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
-
-    ImGui::Begin(std::to_string(p).c_str());
-    ImGui::End();
 }
 
 void App::SimulationStep(float dt) {
