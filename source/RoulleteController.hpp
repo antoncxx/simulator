@@ -6,8 +6,8 @@
 #define TILT_AXIS {1.f, 0.f, 0.f}
 
 struct RotatorParametrs {
-    float AngulatVelocity{ 0.3f };
-    float CurrentAngle{ 0.f };
+    double AngulatVelocity{ 0.3 };
+    double CurrentAngle{ 0. };
 };
 
 struct RoulleteMaterial {

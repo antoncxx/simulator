@@ -47,10 +47,11 @@ void RoulleteController::OnUIUpdate() {
 void RoulleteController::Update(float delta) {
     using namespace physx;
 
-    rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta;
+    rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * static_cast<double>(delta);
+    rotatorParameter.CurrentAngle = std::fmod(rotatorParameter.CurrentAngle, glm::two_pi<double>());
     
     glm::mat4 model = glm::rotate(glm::mat4(1.f), GetTilt(), TILT_AXIS);
-    model = glm::rotate(model, rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0));
+    model = glm::rotate(model, static_cast<float>(rotatorParameter.CurrentAngle), glm::vec3(0, 1, 0));
     glm::quat q = model;
     PxTransform transform(PxQuat(q.x, q.y, q.z, q.w));
     for (auto* mesh : rotators) {
@@ -81,7 +82,7 @@ void RoulleteController::Draw(const std::shared_ptr<Camera>& viewCamera) {
     roulleteShader->SetUniform("model", model);
     staticRoullete->Draw(roulleteShader);
 
-    model = glm::rotate(model, rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0)); // @TODO: read world UP
+    model = glm::rotate(model, static_cast<float>(rotatorParameter.CurrentAngle), glm::vec3(0, 1, 0)); // @TODO: read world UP
     
     
     roulleteShader->SetUniform("model", model);

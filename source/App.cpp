@@ -38,7 +38,7 @@ void App::Initialize() {
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this, false));
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
         if (!state.IsMathTest()) {
-            MathTest(10);
+            MathTest(1'000'000);
         }
     });
     
@@ -163,7 +163,10 @@ void App::MathTest(uint32_t gamesNumber) {
         while (true) {
             total += dt;
 
-            UpdateComponets(dt);
+            ballController->Update(dt);
+            roulleteController->Update(dt);
+            SimulationStep(dt);
+
             int32_t currentPocket = roulleteController->GetPocket(ballController->GetBallTransform(), ballController->GetRadius());
  
             if (currentPocket == roundResult && currentPocket != -1) {
