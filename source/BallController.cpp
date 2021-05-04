@@ -14,7 +14,7 @@ BallController::~BallController() {
 }
 
 void BallController::OnUIUpdate() {
-#ifdef DEBUG
+#if 1
 
     ImGui::Begin("Ball controller");
     ImGui::Text("Material:");

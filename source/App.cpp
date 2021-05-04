@@ -36,11 +36,12 @@ void App::Initialize() {
     ballController     = BallController::Create();
 
     InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::N, std::bind(&App::StartNewRound, this, false));
-    InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
-        if (!state.IsMathTest()) {
-            MathTest(10);
-        }
-    });
+
+    //InputHandler::Instance().RegisterKeyboardCallback(KeyboardButton::M, [this]() {
+    //    if (!state.IsMathTest()) {
+    //        MathTest(10);
+    //    }
+    //});
     
     state.SetState(StateContext::SimulatorState::IDLE);
     auto defaultPosition = roulleteController->GetStartPoint(ballController->GetRadius());

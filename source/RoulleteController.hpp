@@ -8,6 +8,7 @@
 struct RotatorParametrs {
     float AngulatVelocity{ 0.3f };
     float CurrentAngle{ 0.f };
+    float Tilt{ 0.f };
 };
 
 struct RoulleteMaterial {
@@ -32,6 +33,7 @@ class RoulleteController : public UIListener {
     physx::PxMaterial* xMaterial{nullptr};
 
     std::list<physx::PxRigidDynamic*> rotators{};
+    std::list<physx::PxRigidDynamic*> stators{};
 public:
     RoulleteController() noexcept;
     virtual ~RoulleteController() noexcept;
@@ -44,7 +46,7 @@ public:
 
     glm::vec3 GetStartPoint(float ballRadius);
     [[nodiscard]] int32_t GetPocket(physx::PxTransform position, float radius) const;
-    [[nodiscard]] constexpr float GetTilt() const noexcept { return glm::radians(0.f); }
+    [[nodiscard]] float GetTilt() const noexcept { return glm::radians(rotatorParameter.Tilt); }
 private:
     void Initialize();
     void CreatePhysics();

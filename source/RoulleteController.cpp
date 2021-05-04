@@ -20,13 +20,15 @@ std::shared_ptr<RoulleteController> RoulleteController::Create() {
 }
 
 void RoulleteController::OnUIUpdate() {
-#ifdef DEBUG
+#if 1
     ImGui::Begin("Roullete Controller");
     ImGui::Text("3D Models:");
     dynamicRoullete->OnUIUpdate();
     staticRoullete->OnUIUpdate();
     ImGui::Text("Rotator parameters:");
+    ImGui::SliderFloat("Tilt", &rotatorParameter.Tilt, -10.f, 10.f);
     ImGui::SliderFloat("Angular velocity", &rotatorParameter.AngulatVelocity, -glm::pi<float>(), glm::pi<float>());
+   
     ImGui::Text("Material:");
 
     bool materialChanged{ false };
@@ -59,6 +61,11 @@ void RoulleteController::Update(float delta) {
             // !Incorrect way: 
             //mesh->setGlobalPose(transform);
         }
+    }
+
+
+    for (auto* mesh : stators) {
+        mesh->setKinematicTarget(PxTransform(PxQuat(GetTilt(), TILT_AXIS)));
     }
 }
 
@@ -116,12 +123,12 @@ void RoulleteController::ProcessModel(const std::shared_ptr<Model>& model, Model
         auto* shape = physx::PxRigidActorExt::createExclusiveShape(*actor, geometry, *xMaterial);
         scene->addActor(*actor);
 
-        PxQuat quaternion = PxQuat(GetTilt(), TILT_AXIS);
-        actor->setGlobalPose(PxTransform(quaternion));
 
         if (flag == ModelProcessingFlag::DYNAMIC_MODEL) {
             rotators.push_back(actor);
-        } 
+        } else {
+            stators.push_back(actor);
+        }
     }
 
 }

@@ -29,7 +29,7 @@ void Physics::StartUp() {
         auto scale = PxTolerancesScale();
 
         scale.length = SCALE_FACTOR; //TODO: WTF????
-        scale.speed = 1 / SCALE_FACTOR;
+        scale.speed = GRAVITY * SCALE_FACTOR;
 
         physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
         assert(physics);
