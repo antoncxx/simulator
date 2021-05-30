@@ -30,7 +30,7 @@ void BallController::OnUIUpdate() {
         xMaterial->setRestitution(ballMaterial.Restitution);
     }
 
-    ImGui::SliderFloat("Ball speed value: ", &ballSpeedValue, -50.f, 50.f);
+    ImGui::SliderFloat("Ball speed value: ", &ballSpeedValue, -10.f, 10.f);
     ImGui::End();
 #endif // DEBUG
 }
@@ -119,7 +119,6 @@ void BallController::ShootBall(const glm::vec3& from, const glm::vec3& tilt, con
 
 void BallController::EnableSimulation(bool enable) {
     rigidBody->setActorFlag(physx::PxActorFlag::eDISABLE_SIMULATION, !enable);
-
 }
 
 

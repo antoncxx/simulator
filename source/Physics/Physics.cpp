@@ -27,11 +27,9 @@ void Physics::StartUp() {
 
     {
         auto scale = PxTolerancesScale();
+        scale.length = SCALE_FACTOR;
 
-        scale.length = SCALE_FACTOR; //TODO: WTF????
-        scale.speed = GRAVITY * SCALE_FACTOR;
-
-        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, true, nullptr);
+        physics = PxCreatePhysics(PX_PHYSICS_VERSION, *foundation, scale, false, nullptr);
         assert(physics);
 
         PxCookingParams cookingParams(physics->getTolerancesScale());
@@ -56,7 +54,6 @@ void Physics::StartUp() {
 
 void Physics::ShutDown() {
     using namespace physx;
-
     physics->release();
     cooking->release();
     foundation->release();

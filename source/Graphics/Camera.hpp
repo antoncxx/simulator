@@ -20,7 +20,7 @@ struct CameraData {
     float far{};
     float near{};
 
-    float movementSpeed{ 30.25f };
+    float movementSpeed{ 3.25f };
     float mouseSensitivity{ 10.25f };
 
 };

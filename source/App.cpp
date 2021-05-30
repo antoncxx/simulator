@@ -26,7 +26,7 @@ void App::Initialize() {
     };
     skybox = ResourceManager::Instance().CreateSkybox("Sky", faces);
 
-    camera.reset(new Camera({ 10.f, 80.f, 80.f }));
+    camera.reset(new Camera({ 1.f, 8.f, 8.f }));
 
     camera->SetAspectRatio(1.75f);
     camera->SetFov(45.f);

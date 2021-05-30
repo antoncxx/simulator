@@ -49,7 +49,7 @@ void RoulleteController::OnUIUpdate() {
 void RoulleteController::Update(float delta) {
     using namespace physx;
 
-    rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta;
+    rotatorParameter.CurrentAngle += rotatorParameter.AngulatVelocity * delta; // todo: fix float
     
     glm::mat4 model = glm::rotate(glm::mat4(1.f), GetTilt(), TILT_AXIS);
     model = glm::rotate(model, rotatorParameter.CurrentAngle, glm::vec3(0, 1, 0));
@@ -188,7 +188,7 @@ int32_t RoulleteController::GetPocket(physx::PxTransform position, float radius)
             angle += rotatorParameter.CurrentAngle;
             angle = glm::mod(angle, glm::two_pi<float>());
 
-            int32_t offsetIndex = static_cast<size_t>(std::round(angle / dAngle + 0.5));
+            int32_t offsetIndex = static_cast<int32_t>(std::round(angle / dAngle + 0.5));
             return (pocketsNumber + offsetIndex) % pocketsNumber;
         }
     }

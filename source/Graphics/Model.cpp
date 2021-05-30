@@ -52,8 +52,7 @@ namespace {
 
             if (auto resource = ResourceManager::Instance().GetResource(name); resource.has_value()) {
                 texture = std::dynamic_pointer_cast<Texture>(resource.value());
-            }
-            else {
+            } else {
                 texture = ResourceManager::Instance().CreateTexture(name, texturePath);
             }
         }

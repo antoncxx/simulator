@@ -8,7 +8,6 @@ physx::PxTriangleMesh* PXConverter::ConvertMesh(const std::shared_ptr<Mesh>& mes
 
     PxTriangleMeshDesc description;
 
-
     description.points.data   = vertices.data();
     description.points.count  = static_cast<PxU32>(vertices.size());
     description.points.stride = sizeof(Vertex);
